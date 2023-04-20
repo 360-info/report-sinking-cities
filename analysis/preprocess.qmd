@@ -1,0 +1,163 @@
+---
+title: Pre-process
+subtitle: A slightly longer title
+format:
+  360-analysis-html: default
+author: James Goldie
+date: last-modified
+code-fold: true
+---
+
+Observed and interpolated subsistence rates are available for each city as geoTIFFs from [NTU Dataverse](https://researchdata.ntu.edu.sg/dataset.xhtml?persistentId=doi:10.21979/N9/GPVX0F).
+
+```{r setup}
+library(tidyverse)
+library(sf)
+library(terra)
+library(here)
+```
+
+Let's first unzip the dataverse files:
+
+```{r extract}
+# unzip the downloaded dataverse zip
+unzip(
+  here("data", "dataverse_files.zip"),
+  exdir = here("data", "src"))
+
+# unzip each city
+list.files(here("data", "src"), pattern = glob2rx("*.zip"),
+  full.names = TRUE) %>%
+  walk(unzip, exdir = here("data", "src"))
+
+# delete the city zip files
+unlink(here("data", "src", "*.zip"), expand = TRUE)
+```
+
+Each city has four geoTIFFs:
+
+* `velocity_InSAR`: the subsistence velocity observed using InSAR;
+* `velocity_interpolation`: the subsistence velocity interpolated between observations;
+* `velocityStd_InSAR`: the standard deviation of the observed velocity; and
+* `velocityStd_interpolation`: the standard deviation of the interpolated velocity.
+
+:::{.callout-note}
+the velocities and standard deviations of them are both in units of m yr^-1^. The paper's figures present them in units of mm yr^-1^.
+:::
+
+For each city, I want to:
+
+1. Combine the two velocity maps and the two SD maps;
+2. Calculate a normalised standard deviation
+3. Mask the combined velocity map using bins of the combined SD map.
+
+```{r}
+tibble(
+  path = list.files(here("data", "src"), pattern = glob2rx("*.tif"),
+    full.names = TRUE),
+  fname = str_remove(basename(path), ".tif")) %>%
+  # discard the area bmsl files
+  filter(str_detect(fname, "areaBMSL", negate = TRUE)) %>%
+  # extract filename info
+  separate(fname,
+    into = c("city_name", "city_code", "measure", "source"),
+    sep = "_") ->
+city_maps
+```
+
+We'll need to use `{terra}` or a similar raster package to do the above two tasks.
+
+First, we need functions to do the two tasks above:
+
+```{r combine_maps_fn}
+# combine_maps: load two geotiff paths in, merge and write back to disk.
+# return the output path
+combine_maps <- function(path_a, path_b, city, measure) {
+  out_path <- here("data", "1-combined", paste0(city, "_", measure, ".tif"))
+
+  merge(rast(path_a), rast(path_b), filename = out_path, overwrite = TRUE)
+  return(out_path)
+}
+```
+
+```{r get_norm_sd_fn}
+get_norm_sd <- function(velocity_path, sd_path, city) {
+  out_path <- here("data", "1-combined",
+    paste0(city, "_velocityNormStd", ".tif"))
+
+  norm_sd <- rast(sd_path) / rast(velocity_path)
+  writeRaster(norm_sd, out_path, overwrite = TRUE)
+  return(out_path)
+}
+```
+
+```{r mask_map_bysd_fn}
+# mask_map: given a velocity raster and a normalised std deviation path,
+# clip  the velocities to only contain cells with normalised SD within an
+# absolute range of low to high. return the path of the result (written to disk)
+mask_map <- function(velocity_path, normsd_path, low, high, city, thresh_label) {
+  out_path <- here("data", "2-masked",
+    paste0(city, "_", thresh_label, "p.tif"))
+
+  vel <- rast(velocity_path)
+  normsd <- rast(normsd_path)
+  
+  # get an absolute value of the normalised sd
+  abs_normsd <- ifel(normsd < 0, -normsd, normsd)
+
+  # first mask the normalised sd to within the absolute threshold
+  normsd_thresh <- ifel(abs_normsd > high | abs_normsd < low, NA, abs_normsd)
+
+  # then mask the velocity map based on the remaining normalised sd map
+  mask(vel, normsd_thresh, filename = out_path)
+
+  return(out_path)
+}
+```
+
+```{r combine_maps}
+dir.create(here("data", "1-combined"), showWarnings = FALSE)
+dir.create(here("data", "2-masked"), showWarnings = FALSE)
+
+city_maps %>%
+  group_by(city_name, measure) %>%
+  # TODO - assert two rows per group
+  summarise(
+    path = combine_maps(path[1], 
+      path[2], city_name[1], measure[1])) %>%
+  ungroup() ->
+city_maps_combined
+
+# calculate the normalised standard deviations
+city_maps_combined %>%
+  # ensure velocity is first in each group and sd is second
+  arrange(measure) %>%
+  group_by(city_name) %>%
+  summarise(path = get_norm_sd(path[1], path[2], city_name[1])) %>%
+  ungroup() %>%
+  mutate(measure = "velocityNormStd") ->
+city_norm_sds
+
+# combine the normalised standard velocities with the velocities (drop the sds)
+city_maps_combined %>%
+  filter(measure == "velocity") %>%
+  bind_rows(city_norm_sds) %>%
+  arrange(city_name, measure) ->
+city_maps_all
+
+# now do the masking, in bins of normalised standard deviation:
+# 0-25%, 25-50%, 50-1005, > 100%
+city_maps_all %>%
+  group_by(city_name) %>%
+  summarise(
+    masked_path_lt25p =
+      mask_map(path[1], path[2], 0,    0.25, city_name[1], "0to25p"),
+    masked_path_lt50p =
+      mask_map(path[1], path[2], 0.25, 0.5,  city_name[1], "25to50p"),
+    masked_path_lt100p =
+      mask_map(path[1], path[2], 0.5,  1,    city_name[1], "50to100p"),
+    masked_path_gt100p =
+      mask_map(path[1], path[2], 1,    Inf,  city_name[1], "gt100p")) ->
+city_maps_masked
+```
+

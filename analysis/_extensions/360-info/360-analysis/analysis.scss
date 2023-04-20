@@ -1,0 +1,18 @@
+/*-- scss:defaults --*/
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,700;0,900;1,300;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+$font-family-sans-serif: "Public Sans";
+$font-family-monospace: "Fira Code";
+$link-color: #36a7e9;
+
+/*-- scss:rules --*/
+
+h1.title, #title-block-header.quarto-title-block.default .quarto-title h1.title {
+  color: #36a7e9;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+}
