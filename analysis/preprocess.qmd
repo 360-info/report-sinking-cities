@@ -16,6 +16,7 @@ Although some Dataverse instances have an API, I couldn't verify that this one d
 library(tidyverse)
 library(sf)
 library(terra)
+library(tidyterra)
 library(here)
 ```
 
@@ -215,8 +216,7 @@ city_maps_info
 # export to csv (dropping paths)
 city_maps_info %>%
   select(filename, min, max, xmin, xmax, ymin, ymax) %>%
-  write_csv(here("data", "map-bounds-extent.csv")) ->
-city_maps_info
+  write_csv(here("data", "map-bounds-extent.csv"))
 ```
 
 We want to ensure all the maps are made using a common, symmetrical colour scale.
