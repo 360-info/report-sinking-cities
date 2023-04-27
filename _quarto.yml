@@ -2,7 +2,8 @@ project:
   type: website
   output-dir: out
   resources:
-    - /data/3-pngs/Abidjan_*.png
+    - /data/3-pngs/*.png
+    - data/map-bounds-extent.csv
   
 # only re-render if the source changes or if we specifically render that file
 execute:

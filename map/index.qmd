@@ -39,22 +39,56 @@ deck = r("deck");
 ```
 
 ```{ojs}
+//| label: city-bounds
+
+// load bounds data and extract city names
+cityBounds = FileAttachment("/data/map-bounds-extent.csv").csv({ typed: true })
+cityBoundsExtracted = cityBounds
+  .map(d => ({ ...d, city: d.filename.split("_")[0] }))
+
+
+// get bounds of selected city
+// (there'll be duploicates; just grab the first)
+// mapbox and deckgl take bounds in different orders, ugh
+filteredCityInfo = cityBoundsExtracted.filter(d => d.city == selectedCity)
+filteredCityBoundsMapbox = [
+    [filteredCityInfo[0].xmin, filteredCityInfo[0].ymin],
+    [filteredCityInfo[0].xmax, filteredCityInfo[0].ymax]
+  ]
+filteredCityBoundsDeckGL = [
+  filteredCityInfo[0].xmin,
+  filteredCityInfo[0].ymin,
+  filteredCityInfo[0].xmax,
+  filteredCityInfo[0].ymax
+]
+
+// fly to the selected city whenever it changes
+map.fitBounds(filteredCityBoundsMapbox,
+  {
+    // easing: {
+    //   // offset?
+    //   duration: 1500
+    // }
+    linear: false
+  })
+```
+
+```{ojs}
 //| label: inputs
 //| classes: inputForm
-viewof selectedCity = Inputs.select([
-  "HoChiMinhCity",
-  "Jakarta"
-  ], {
-    label: "City"
-  });
+
+// get list of all unique cities (with which to populate dropdown menu below)
+allCities = [...new Set(cityBoundsExtracted.map(d => d.city))]
+
+viewof selectedCity = Inputs.select(allCities, { label: "City" });
 
 viewof selectedCertainties = Inputs.checkbox(
   ["0to25", "25to50", "50to100", "gt100"],
   {
-    label: "More or less certainty?"
+    label: "More or less certainty?",
+    value: ["0to25", "25to50", "50to100", "gt100"]
   }
-)
-
+);
 ```
 
 ```{ojs}
@@ -65,17 +99,33 @@ viewof selectedCertainties = Inputs.checkbox(
 // set data later
 
 // deck.BitmapLayer?
-raster_0to25 = new deck.MapboxLayer({
-  id: "raster_0to25", type: deck.BitmapLayer, image: []
+layer_0to25 = new deck.MapboxLayer({
+  id: "raster_0to25", type: deck.BitmapLayer, image: [],
+//   textureParameters: {
+//   [GL.TEXTURE_MIN_FILTER]: GL.NEAREST,
+//   [GL.TEXTURE_MAG_FILTER]: GL.NEAREST
+// }
 });
-raster_25to50 = new deck.MapboxLayer({
-  id: "raster_25to50", type: deck.BitmapLayer, image: []
+layer_25to50 = new deck.MapboxLayer({
+  id: "raster_25to50", type: deck.BitmapLayer, image: [],
+//   textureParameters: {
+//   [GL.TEXTURE_MIN_FILTER]: GL.NEAREST,
+//   [GL.TEXTURE_MAG_FILTER]: GL.NEAREST
+// }
 });
-raster_50to100 = new deck.MapboxLayer({
-  id: "raster_50to100", type: deck.BitmapLayer, image: []
+layer_50to100 = new deck.MapboxLayer({
+  id: "raster_50to100", type: deck.BitmapLayer, image: [],
+//   textureParameters: {
+//   [GL.TEXTURE_MIN_FILTER]: GL.NEAREST,
+//   [GL.TEXTURE_MAG_FILTER]: GL.NEAREST
+// }
 });
-raster_gt100 = new deck.MapboxLayer({
-  id: "raster_gt100", type: deck.BitmapLayer, image: []
+layer_gt100 = new deck.MapboxLayer({
+  id: "raster_gt100", type: deck.BitmapLayer, image: [],
+//   textureParameters: {
+//   [GL.TEXTURE_MIN_FILTER]: GL.NEAREST,
+//   [GL.TEXTURE_MAG_FILTER]: GL.NEAREST
+// }
 });
 ```
 
@@ -83,41 +133,30 @@ raster_gt100 = new deck.MapboxLayer({
 //| label: raster-layer-update
 //| output: false
 
-// separately add data to mapbox layer so it can update as needed
-// (bounds from qgis, but we could run them off ahead of time)
-testBounds = [
-    -4.292916666833331, 5.22125016616666,
-    -3.7187502298333306, 5.63625000016666];
-testCity = "Abidjan";
+// conditionally display city's png if certainty is checked
+path_0to25 = selectedCertainties.includes("0to25") ?
+    "/data/3-pngs/" + selectedCity + "_0to25pp.png" : null
+path_25to50 = selectedCertainties.includes("25to50") ?
+    "/data/3-pngs/" + selectedCity + "_25to50pp.png" : null
+path_50to100 = selectedCertainties.includes("50to100") ?
+    "/data/3-pngs/" + selectedCity + "_50to100pp.png" : null
+path_gt100 = selectedCertainties.includes("gt100") ?
+    "/data/3-pngs/" + selectedCity + "_gt100pp.png" : null
 
-// conditional display
-testImg_0to25 =
-  selectedCertainties.includes("0to25") ?
-  "/data/3-pngs/" + testCity + "_0to25pp.png" : null
-testImg_25to50 =
-  selectedCertainties.includes("25to50") ?
-  "/data/3-pngs/" + testCity + "_25to50pp.png" : null
-testImg_50to100 =
-  selectedCertainties.includes("50to100") ?
-  "/data/3-pngs/" + testCity + "_50to100pp.png" : null
-testImg_gt100 =
-  selectedCertainties.includes("gt100") ?
-  "/data/3-pngs/" + testCity + "_gt100pp.png" : null
+console.log("Path to load: " + path_0to25)
+console.log("Path to load: " + path_25to50)
+console.log("Path to load: " + path_50to100)
+console.log("Path to load: " + path_gt100)
 
-// testImg_0to25 = "/data/3-pngs/" + testCity + "_0to25pp.png"
-// testImg_25to50 = "/data/3-pngs/" + testCity + "_25to50pp.png"
-// testImg_50to100 = "/data/3-pngs/" + testCity + "_50to100pp.png"
-// testImg_gt100 = "/data/3-pngs/" + testCity + "_gt100pp.png"
+// textureParams = {
+//   [GL.TEXTURE_MIN_FILTER]: GL.NEAREST,
+//   [GL.TEXTURE_MAG_FILTER]: GL.NEAREST
+// }
 
-
-raster_0to25.setProps({ image: testImg_0to25, bounds: testBounds });
-raster_25to50.setProps({ image: testImg_25to50, bounds: testBounds });
-raster_50to100.setProps({ image: testImg_50to100, bounds: testBounds });
-raster_gt100.setProps({ image: testImg_gt100, bounds: testBounds });
-
-
-// filename,min,max,xmin,xmax,ymin,ymax
-// Abidjan_0to25pp.tif,-0.03,0.04,-4.292916666833331,-3.7187502298333306,5.22125016616666,5.63625000016666
+layer_0to25.setProps({ image: path_0to25, bounds: filteredCityBoundsDeckGL })
+layer_25to50.setProps({ image: path_25to50, bounds: filteredCityBoundsDeckGL })
+layer_50to100.setProps({ image: path_50to100, bounds: filteredCityBoundsDeckGL })
+layer_gt100.setProps({ image: path_gt100, bounds: filteredCityBoundsDeckGL })
 ```
 
 ```{ojs}
@@ -150,10 +189,10 @@ viewof map = {
     container.value = map;
     container.dispatchEvent(new CustomEvent("input"));
     
-    map.addLayer(raster_0to25);
-    map.addLayer(raster_25to50);
-    map.addLayer(raster_50to100);
-    map.addLayer(raster_gt100);
+    map.addLayer(layer_0to25);
+    map.addLayer(layer_25to50);
+    map.addLayer(layer_50to100);
+    map.addLayer(layer_gt100);
 
     // also configure the automatically-create deck instance
     // raster0to25.deck.setProps({ pickingRadius: 10 });
