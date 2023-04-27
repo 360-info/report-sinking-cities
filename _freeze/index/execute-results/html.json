@@ -1,0 +1,18 @@
+{
+  "hash": "f26e339ca8f1f84d964f492a9df8da25",
+  "result": {
+    "markdown": "---\ntitle: \"Container test\"\nauthor: \"James Goldie\"\nformat: html\n---\n\n\nI love containers! So useful. Can we do R stuff in the rocker container? Let's see:\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(tibble)\n\nmydata <- tibble(x = 1:10, y = x^2)\nojs_define(mydata)\n```\n:::\n\n\nAnd maybe an Observable chart too?\n\n\n```{ojs}\n//| label: somechart\n\nPlot.plot({\n  marks: [\n    Plot.barY(transpose(mydata), {\n      x: \"x\",\n      y: \"y\"\n    })\n  ]\n})\n```\n\n\nGreat!\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<script type=\"ojs-define\">\n{\"contents\":[{\"name\":\"mydata\",\"value\":{\"x\":[1,2,3,4,5,6,7,8,9,10],\"y\":[1,4,9,16,25,36,49,64,81,100]}}]}\n</script>\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
