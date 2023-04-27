@@ -1,0 +1,166 @@
+---
+title: Untitled
+format:
+  360-embed-html: default
+author: James Goldie
+date: last-modified
+resources:
+  - style.json
+  - tiles/*
+  - tiles/*/*/*.pbf
+  - font/*
+  - font/*/*
+  - testplot.png
+360embed:
+  before: |
+    &lt;iframe allow=&quot;fullscreen&quot; allowfullscreen=&quot;true&quot; src=&quot;
+  # uncomment and modify this line for production
+  # url: https://may2023.360info-sinking-cities.pages.dev/news/
+  url: example.com
+  after: |
+    &quot; title=&quot;Interactive: future heat&quot; style=&quot;width:100%; height:500px; border:none; background-color: white;&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;
+---
+
+{{< include _popup-buttons.qmd >}}
+
+```{ojs}
+//| label: libraries
+
+r = require.alias({
+  maplibregl: "maplibre-gl@2.4.0/dist/maplibre-gl.js",
+  h3: {},
+  deck: "deck.gl@latest/dist.min.js",
+  // deckglraster: "@kylebarron/deck.gl-raster@^0.3.1"
+});
+
+maplibregl = r("maplibregl").catch(() => window["maplibregl"]);
+deck = r("deck");
+// deckglraster = r("deckglraster");
+```
+
+```{ojs}
+//| label: inputs
+//| classes: inputForm
+viewof selectedCity = Inputs.select([
+  "HoChiMinhCity",
+  "Jakarta"
+  ], {
+    label: "City"
+  });
+
+viewof selectedCertainties = Inputs.checkbox(
+  ["0to25", "25to50", "50to100", "gt100"],
+  {
+    label: "More or less certainty?"
+  }
+)
+
+```
+
+```{ojs}
+//| label: raster-layer-def
+//| output: false
+
+// TODO - add raster layers here based on `selectedCity`
+// set data later
+
+// deck.BitmapLayer?
+raster_0to25 = new deck.MapboxLayer({
+  id: "raster_0to25", type: deck.BitmapLayer, image: []
+});
+raster_25to50 = new deck.MapboxLayer({
+  id: "raster_25to50", type: deck.BitmapLayer, image: []
+});
+raster_50to100 = new deck.MapboxLayer({
+  id: "raster_50to100", type: deck.BitmapLayer, image: []
+});
+raster_gt100 = new deck.MapboxLayer({
+  id: "raster_gt100", type: deck.BitmapLayer, image: []
+});
+```
+
+```{ojs}
+//| label: raster-layer-update
+//| output: false
+
+// separately add data to mapbox layer so it can update as needed
+// (bounds from qgis, but we could run them off ahead of time)
+testBounds = [
+    -4.292916666833331, 5.22125016616666,
+    -3.7187502298333306, 5.63625000016666];
+testCity = "Abidjan";
+
+// conditional display
+testImg_0to25 =
+  selectedCertainties.includes("0to25") ?
+  "/data/3-pngs/" + testCity + "_0to25pp.png" : null
+testImg_25to50 =
+  selectedCertainties.includes("25to50") ?
+  "/data/3-pngs/" + testCity + "_25to50pp.png" : null
+testImg_50to100 =
+  selectedCertainties.includes("50to100") ?
+  "/data/3-pngs/" + testCity + "_50to100pp.png" : null
+testImg_gt100 =
+  selectedCertainties.includes("gt100") ?
+  "/data/3-pngs/" + testCity + "_gt100pp.png" : null
+
+// testImg_0to25 = "/data/3-pngs/" + testCity + "_0to25pp.png"
+// testImg_25to50 = "/data/3-pngs/" + testCity + "_25to50pp.png"
+// testImg_50to100 = "/data/3-pngs/" + testCity + "_50to100pp.png"
+// testImg_gt100 = "/data/3-pngs/" + testCity + "_gt100pp.png"
+
+
+raster_0to25.setProps({ image: testImg_0to25, bounds: testBounds });
+raster_25to50.setProps({ image: testImg_25to50, bounds: testBounds });
+raster_50to100.setProps({ image: testImg_50to100, bounds: testBounds });
+raster_gt100.setProps({ image: testImg_gt100, bounds: testBounds });
+
+
+// filename,min,max,xmin,xmax,ymin,ymax
+// Abidjan_0to25pp.tif,-0.03,0.04,-4.292916666833331,-3.7187502298333306,5.22125016616666,5.63625000016666
+```
+
+```{ojs}
+//| label: map
+
+viewof map = {
+  let container = html`<div style="position: absolute; left: 0; top: 0; height: 100vh; width: 100%;" />`;
+
+  // Give the container dimensions.
+  yield container;
+
+  // Create the \`map\` object with the mapboxgl.Map constructor, referencing
+  // the container div
+  let map = new maplibregl.Map({
+    container,
+    // bounds: [[106.282959, 11.256862], [107.143957, 10.213583]],
+    bounds: [
+      [-4.292916666833331, 5.22125016616666],
+      [-3.7187502298333306, 5.63625000016666]
+      ],
+    // pitch: 30,
+    antialias: true,
+    style: "style.json"
+  });
+
+  // on map load:
+  // - dispatch its value back to ojs
+  // - add the deck.gl layer to the map
+  map.on("load", () => {
+    container.value = map;
+    container.dispatchEvent(new CustomEvent("input"));
+    
+    map.addLayer(raster_0to25);
+    map.addLayer(raster_25to50);
+    map.addLayer(raster_50to100);
+    map.addLayer(raster_gt100);
+
+    // also configure the automatically-create deck instance
+    // raster0to25.deck.setProps({ pickingRadius: 10 });
+    
+  });
+}
+```
+
+
+{{< include _popup-dialogs.qmd >}}
