@@ -27,7 +27,7 @@
 		},
 		/* add additional r packages here */
 		"ghcr.io/rocker-org/devcontainer-features/r-packages:1": {
-			"packages": "github::rstudio/renv,tidyverse,here,httpgd,sf,terra"
+			"packages": "github::rstudio/renv,tidyverse,here,httpgd,sf,terra,tidyterra"
 		},
 	},
 

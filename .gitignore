@@ -19,6 +19,7 @@ Thumbs.db
 /out/*
 !/out
 
-# unprocessed dataverse files
+# unprocessed (or partially processed) dataverse files
 data/dataverse_files.zip
 data/src
+data/1-combined

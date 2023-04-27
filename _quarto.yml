@@ -1,6 +1,9 @@
 project:
   type: website
   output-dir: out
+  resources:
+    - /data/2-masked/HoChiMinhCity_*.tif
+    # - /data/2-masked/Jakarta*
   
 # only re-render if the source changes or if we specifically render that file
 execute:

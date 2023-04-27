@@ -10,6 +10,8 @@ code-fold: true
 
 Observed and interpolated subsistence rates are available for each city as geoTIFFs from [NTU Dataverse](https://researchdata.ntu.edu.sg/dataset.xhtml?persistentId=doi:10.21979/N9/GPVX0F).
 
+Although some Dataverse instances have an API, I couldn't verify that this one does. Instead, you can [download the dataset manually](https://researchdata.ntu.edu.sg/dataset.xhtml?persistentId=doi:10.21979/N9/GPVX0F) and place it in `/data` as `dataverse_files.zip`.
+
 ```{r setup}
 library(tidyverse)
 library(sf)
@@ -19,7 +21,9 @@ library(here)
 
 Let's first unzip the dataverse files:
 
-```{r extract}
+```{r}
+#| label: extract
+
 # unzip the downloaded dataverse zip
 unzip(
   here("data", "dataverse_files.zip"),
@@ -52,6 +56,8 @@ For each city, I want to:
 3. Mask the combined velocity map using bins of the combined SD map.
 
 ```{r}
+#| label: get-files
+
 tibble(
   path = list.files(here("data", "src"), pattern = glob2rx("*.tif"),
     full.names = TRUE),
@@ -69,7 +75,8 @@ We'll need to use `{terra}` or a similar raster package to do the above two task
 
 First, we need functions to do the two tasks above:
 
-```{r combine_maps_fn}
+```{r}
+#| label: fn-combine-maps
 # combine_maps: load two geotiff paths in, merge and write back to disk.
 # return the output path
 combine_maps <- function(path_a, path_b, city, measure) {
@@ -80,7 +87,8 @@ combine_maps <- function(path_a, path_b, city, measure) {
 }
 ```
 
-```{r get_norm_sd_fn}
+```{r}
+#| label: fn-get-norm-sd
 get_norm_sd <- function(velocity_path, sd_path, city) {
   out_path <- here("data", "1-combined",
     paste0(city, "_velocityNormStd", ".tif"))
@@ -91,9 +99,10 @@ get_norm_sd <- function(velocity_path, sd_path, city) {
 }
 ```
 
-```{r mask_map_bysd_fn}
+```{r}
+#| label: fn-mask-map-bysd
 # mask_map: given a velocity raster and a normalised std deviation path,
-# clip  the velocities to only contain cells with normalised SD within an
+# clip the velocities to only contain cells with normalised SD within an
 # absolute range of low to high. return the path of the result (written to disk)
 mask_map <- function(velocity_path, normsd_path, low, high, city, thresh_label) {
   out_path <- here("data", "2-masked",
@@ -109,13 +118,14 @@ mask_map <- function(velocity_path, normsd_path, low, high, city, thresh_label) 
   normsd_thresh <- ifel(abs_normsd > high | abs_normsd < low, NA, abs_normsd)
 
   # then mask the velocity map based on the remaining normalised sd map
-  mask(vel, normsd_thresh, filename = out_path)
+  mask(vel, normsd_thresh, filename = out_path, overwrite = TRUE)
 
   return(out_path)
 }
 ```
 
-```{r combine_maps}
+```{r}
+#| label: combine-maps
 dir.create(here("data", "1-combined"), showWarnings = FALSE)
 dir.create(here("data", "2-masked"), showWarnings = FALSE)
 
@@ -150,14 +160,132 @@ city_maps_all
 city_maps_all %>%
   group_by(city_name) %>%
   summarise(
-    masked_path_lt25p =
+    masked_path_0to25p =
       mask_map(path[1], path[2], 0,    0.25, city_name[1], "0to25p"),
-    masked_path_lt50p =
+    masked_path_25to50p =
       mask_map(path[1], path[2], 0.25, 0.5,  city_name[1], "25to50p"),
-    masked_path_lt100p =
+    masked_path_50to100p =
       mask_map(path[1], path[2], 0.5,  1,    city_name[1], "50to100p"),
     masked_path_gt100p =
       mask_map(path[1], path[2], 1,    Inf,  city_name[1], "gt100p")) ->
 city_maps_masked
 ```
 
+We also need to convert these TIFFs to PNGs for web display, and we need to run off their extents (along with the reference point KMLs) as a data frame to help us fit the PNGs on the map.
+
+```{r}
+#| label: fn-get-range-bounds
+# get_range_bounds: given a raster path, return a list containing:
+#   - the `min` and `max` values of the raster band
+#   - the 
+get_range_bounds <- function(path) {
+  
+  # open raster and get summary and extent
+  vel <- rast(path)
+  vel_summary <- summary(vel)
+
+  # extract raster range from summary
+  vel_min <-
+    vel_summary %>% pluck(1) %>% str_remove("Min.   :") %>% as.numeric()
+  vel_max <-
+    vel_summary %>% pluck(6) %>% str_remove("Max.   :") %>% as.numeric()
+
+  return(list(
+    min = vel_min,
+    max = vel_max,
+    xmin = xmin(vel),
+    xmax = xmax(vel),
+    ymin = ymin(vel),
+    ymax = ymax(vel)))
+}
+``` 
+
+```{r extents}
+#| label: export-extents-ranges-and-reference-points
+city_maps_masked %>%
+  pivot_longer(starts_with("masked"), names_to = "measure",
+    values_to = "path") %>%
+  mutate(
+    range_bounds = map(path, get_range_bounds),
+    measure = str_remove(measure, "masked_path_"),
+    filename = basename(path)) %>%
+  unnest_wider(range_bounds) ->
+city_maps_info
+  
+# export to csv (dropping paths)
+city_maps_info %>%
+  select(filename, min, max, xmin, xmax, ymin, ymax) %>%
+  write_csv(here("data", "map-bounds-extent.csv")) ->
+city_maps_info
+```
+
+We want to ensure all the maps are made using a common, symmetrical colour scale.
+To do that, I'll get a range that covers all of the cities' data ranges, and I'll push it out so that it's symmetrical around zero:
+
+```{r}
+#| label: export-png-prep
+
+dir.create(here("data", "3-pngs"), showWarnings = FALSE)
+
+# first, we need to settle on a common range that encompasses all the files
+# (and make it symmetrical around 0)
+data_range <- c(
+  min(city_maps_info$min, na.rm = TRUE),
+  max(city_maps_info$max, na.rm = TRUE)) %>%
+  abs() %>%
+  max()
+
+# compute breaks based on that range
+number_colours <- 10
+palette_breaks <- seq(-data_range, data_range, length.out = number_colours + 1)
+```
+
+Here's our plotting function:
+
+```{r}
+#| label: fn-plot-raster-png
+
+# plot_raster_png: save the raster as a png (using tidyterra to make applying
+# a common scale across files much easier)
+plot_raster_png <- function(path) {
+
+  vel <- rast(path)
+
+  # use zero scale expansion + void theme to remove margins
+  vel_plot <- ggplot() +
+    geom_spatraster(data = vel) +
+    scale_fill_fermenter(
+      type = "div",
+      palette = "RdYlBu",
+      direction = 1,
+      na.value = NA,
+      # use `breaks` and `limits` to supply our common breaks
+      # (and force all of them to be used)
+      breaks = palette_breaks,
+      limits = range(palette_breaks),
+      guide = NULL) +
+    # push plot out to edges of the panel
+    scale_x_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(expand = expansion(0, 0)) +
+    # remove backgrounds and other elements
+    theme_void() +
+    theme(
+      plot.background = element_blank(),
+      panel.background = element_blank())
+
+  ggsave(
+    here("data", "3-pngs", str_replace(basename(path), ".tif$", ".png")),
+    vel_plot,
+    dpi = 72)
+
+}
+```
+
+Let's do the export on each processed TIF now:
+
+```{r}
+#| label: export-pngs
+city_maps_info %>%
+  pull(path) %>%
+  walk(plot_raster_png)
+```
