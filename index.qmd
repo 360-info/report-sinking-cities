@@ -1,33 +1,8 @@
 ---
-title: "Container test"
+title: "Sinking cities"
 author: "James Goldie"
 format: html
 ---
 
-I love containers! So useful. Can we do R stuff in the rocker container? Let's see:
-
-```{r}
-#| label: rtest
-
-library(tibble)
-
-mydata <- tibble(x = 1:10, y = x^2)
-ojs_define(mydata)
-```
-
-And maybe an Observable chart too?
-
-```{ojs}
-//| label: somechart
-
-Plot.plot({
-  marks: [
-    Plot.barY(transpose(mydata), {
-      x: "x",
-      y: "y"
-    })
-  ]
-})
-```
-
-Great!
+1. [`analysis/preprocess.qmd`](analysis/preprocess.qmd): processes raster data from [Tay et al. (2022)](https://doi.org/10.1038/s41893-022-00947-z), breaking velocity fields up into separate fils according to their normalised standard deviation.
+2. [`map`](map/index.qmd): interactively displays the city maps
