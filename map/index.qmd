@@ -30,11 +30,12 @@ r = require.alias({
   maplibregl: "maplibre-gl@2.4.0/dist/maplibre-gl.js",
   h3: {},
   deck: "deck.gl@latest/dist.min.js",
-  // deckglraster: "@kylebarron/deck.gl-raster@^0.3.1"
+  lumaconstants: "@luma.gl/constants@8.5.16/dist/dist.min.js"
 });
 
 maplibregl = r("maplibregl").catch(() => window["maplibregl"]);
 deck = r("deck");
+lumaconstants = r("lumaconstants")
 // deckglraster = r("deckglraster");
 ```
 
@@ -98,34 +99,35 @@ viewof selectedCertainties = Inputs.checkbox(
 // TODO - add raster layers here based on `selectedCity`
 // set data later
 
-// deck.BitmapLayer?
+// define layers but don't add images yet
+// (also disable the default interpolation, so we can stack the layers)
 layer_0to25 = new deck.MapboxLayer({
   id: "raster_0to25", type: deck.BitmapLayer, image: [],
-//   textureParameters: {
-//   [GL.TEXTURE_MIN_FILTER]: GL.NEAREST,
-//   [GL.TEXTURE_MAG_FILTER]: GL.NEAREST
-// }
+  textureParameters: {
+    [lumaconstants.GL.TEXTURE_MIN_FILTER]: lumaconstants.GL.NEAREST,
+    [lumaconstants.GL.TEXTURE_MAG_FILTER]: lumaconstants.GL.NEAREST
+  }
 });
 layer_25to50 = new deck.MapboxLayer({
   id: "raster_25to50", type: deck.BitmapLayer, image: [],
-//   textureParameters: {
-//   [GL.TEXTURE_MIN_FILTER]: GL.NEAREST,
-//   [GL.TEXTURE_MAG_FILTER]: GL.NEAREST
-// }
+  textureParameters: {
+    [lumaconstants.GL.TEXTURE_MIN_FILTER]: lumaconstants.GL.NEAREST,
+    [lumaconstants.GL.TEXTURE_MAG_FILTER]: lumaconstants.GL.NEAREST
+  }
 });
 layer_50to100 = new deck.MapboxLayer({
   id: "raster_50to100", type: deck.BitmapLayer, image: [],
-//   textureParameters: {
-//   [GL.TEXTURE_MIN_FILTER]: GL.NEAREST,
-//   [GL.TEXTURE_MAG_FILTER]: GL.NEAREST
-// }
+  textureParameters: {
+    [lumaconstants.GL.TEXTURE_MIN_FILTER]: lumaconstants.GL.NEAREST,
+    [lumaconstants.GL.TEXTURE_MAG_FILTER]: lumaconstants.GL.NEAREST
+  }
 });
 layer_gt100 = new deck.MapboxLayer({
   id: "raster_gt100", type: deck.BitmapLayer, image: [],
-//   textureParameters: {
-//   [GL.TEXTURE_MIN_FILTER]: GL.NEAREST,
-//   [GL.TEXTURE_MAG_FILTER]: GL.NEAREST
-// }
+  textureParameters: {
+    [lumaconstants.GL.TEXTURE_MIN_FILTER]: lumaconstants.GL.NEAREST,
+    [lumaconstants.GL.TEXTURE_MAG_FILTER]: lumaconstants.GL.NEAREST
+  }
 });
 ```
 
@@ -147,11 +149,6 @@ console.log("Path to load: " + path_0to25)
 console.log("Path to load: " + path_25to50)
 console.log("Path to load: " + path_50to100)
 console.log("Path to load: " + path_gt100)
-
-// textureParams = {
-//   [GL.TEXTURE_MIN_FILTER]: GL.NEAREST,
-//   [GL.TEXTURE_MAG_FILTER]: GL.NEAREST
-// }
 
 layer_0to25.setProps({ image: path_0to25, bounds: filteredCityBoundsDeckGL })
 layer_25to50.setProps({ image: path_25to50, bounds: filteredCityBoundsDeckGL })
@@ -193,9 +190,6 @@ viewof map = {
     map.addLayer(layer_25to50);
     map.addLayer(layer_50to100);
     map.addLayer(layer_gt100);
-
-    // also configure the automatically-create deck instance
-    // raster0to25.deck.setProps({ pickingRadius: 10 });
     
   });
 }
