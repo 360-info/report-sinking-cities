@@ -1,5 +1,6 @@
 ---
 title: Untitled
+subtitle: Some more **bold** text here
 format:
   360-embed-html: default
 resources:
@@ -74,14 +75,10 @@ filteredCityBoundsDeckGL = [
   filteredCityInfo[0].ymax
 ]
 
-// fly to the selected city whenever it changes
-map.fitBounds(filteredCityBoundsMapbox,
-  {
-    // easing: {
-    //   // offset?
-    //   duration: 1500
-    // }
-    linear: false
+// fly to the selected city whenever it changes (accounting for bottom bar)
+map.fitBounds(filteredCityBoundsMapbox, {
+  linear: false,
+  offset: [0, -80]
   })
 ```
 
@@ -97,10 +94,28 @@ viewof selectedCity = Inputs.select(allCities, { label: "City" });
 viewof selectedCertainties = Inputs.checkbox(
   ["0to25", "25to50", "50to100", "gt100"],
   {
-    label: "More or less certainty?",
+    label: "Certainty",
     value: ["0to25", "25to50", "50to100", "gt100"]
   }
 );
+
+width = 25
+bins = 10
+legend =
+  svg`<svg height="65px" width="${width * bins}px">
+    <text fill="black" y=15 text-anchor="start" x=0>Sinking</text>
+    <text fill="black" y=15 text-anchor="end" x=${width * bins}>
+      Rising
+    </text>
+    ${d3.schemeRdYlBu[bins].map(
+      (colour, i) => svg`<rect height=15 y=23 width=${width}
+        x=${width * i} fill="${colour}"></rect>`
+    )}
+    <text fill="black" y=55 text-anchor="start" x=0>-15cm/yr</text>
+    <text fill="black" y=55 text-anchor="end" x=${width * bins}>
+      15cm/yr
+    </text>
+  </svg>`
 ```
 
 ```{ojs}
@@ -180,7 +195,8 @@ viewof map = {
       ],
     // pitch: 30,
     antialias: true,
-    style: "style.json"
+    style: "style.json",
+    attributionControl: false
   });
 
   // on map load:
@@ -198,6 +214,7 @@ viewof map = {
   });
 }
 ```
+
 
 
 {{< include _popup-dialogs.qmd >}}

@@ -61,7 +61,7 @@
   (if there isn't room, put it in the ABOUT dialog) -->
 James Goldie, 360info
 
-Data: IRENA
+Data: Tay et al 2022
 
 ::::
 
