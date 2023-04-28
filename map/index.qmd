@@ -2,8 +2,6 @@
 title: Untitled
 format:
   360-embed-html: default
-author: James Goldie
-date: last-modified
 resources:
   - style.json
   - tiles/*
@@ -25,28 +23,41 @@ resources:
 
 ```{ojs}
 //| label: libraries
+//| output: false
 
 r = require.alias({
   maplibregl: "maplibre-gl@2.4.0/dist/maplibre-gl.js",
   h3: {},
-  deck: "deck.gl@latest/dist.min.js",
+  deck: "deck.gl@8.9.4/dist.min.js",
   lumaconstants: "@luma.gl/constants@8.5.16/dist/dist.min.js"
 });
 
 maplibregl = r("maplibregl").catch(() => window["maplibregl"]);
-deck = r("deck");
-lumaconstants = r("lumaconstants")
-// deckglraster = r("deckglraster");
+
+// absolutely convulted deck.gl + luma.gl constants loading based on
+// https://observablehq.com/@observablehq/how-to-require-stubborn-modules#cell-68
+// (manually patching luma constants into deck's luma)
+lib = {
+  const deck = (window.deck = await r("deck"));
+  const luma = (window.luma = await r("deck"));
+  const lumaconstants = await r("lumaconstants")
+  luma.GL = lumaconstants.GL;
+  return {
+    deck: deck,
+    luma: luma
+  }
+}
+
 ```
 
 ```{ojs}
-//| label: city-bounds
+//| label: zoom-to-city-bounds
+//| output: false
 
 // load bounds data and extract city names
 cityBounds = FileAttachment("/data/map-bounds-extent.csv").csv({ typed: true })
 cityBoundsExtracted = cityBounds
   .map(d => ({ ...d, city: d.filename.split("_")[0] }))
-
 
 // get bounds of selected city
 // (there'll be duploicates; just grab the first)
@@ -96,37 +107,34 @@ viewof selectedCertainties = Inputs.checkbox(
 //| label: raster-layer-def
 //| output: false
 
-// TODO - add raster layers here based on `selectedCity`
-// set data later
-
 // define layers but don't add images yet
 // (also disable the default interpolation, so we can stack the layers)
-layer_0to25 = new deck.MapboxLayer({
-  id: "raster_0to25", type: deck.BitmapLayer, image: [],
+layer_0to25 = new lib.deck.MapboxLayer({
+  id: "raster_0to25", type: lib.deck.BitmapLayer, image: [],
   textureParameters: {
-    [lumaconstants.GL.TEXTURE_MIN_FILTER]: lumaconstants.GL.NEAREST,
-    [lumaconstants.GL.TEXTURE_MAG_FILTER]: lumaconstants.GL.NEAREST
+    [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,
+    [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST
   }
 });
-layer_25to50 = new deck.MapboxLayer({
-  id: "raster_25to50", type: deck.BitmapLayer, image: [],
+layer_25to50 = new lib.deck.MapboxLayer({
+  id: "raster_25to50", type: lib.deck.BitmapLayer, image: [],
   textureParameters: {
-    [lumaconstants.GL.TEXTURE_MIN_FILTER]: lumaconstants.GL.NEAREST,
-    [lumaconstants.GL.TEXTURE_MAG_FILTER]: lumaconstants.GL.NEAREST
+    [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,
+    [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST
   }
 });
-layer_50to100 = new deck.MapboxLayer({
-  id: "raster_50to100", type: deck.BitmapLayer, image: [],
+layer_50to100 = new lib.deck.MapboxLayer({
+  id: "raster_50to100", type: lib.deck.BitmapLayer, image: [],
   textureParameters: {
-    [lumaconstants.GL.TEXTURE_MIN_FILTER]: lumaconstants.GL.NEAREST,
-    [lumaconstants.GL.TEXTURE_MAG_FILTER]: lumaconstants.GL.NEAREST
+    [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,
+    [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST
   }
 });
-layer_gt100 = new deck.MapboxLayer({
-  id: "raster_gt100", type: deck.BitmapLayer, image: [],
+layer_gt100 = new lib.deck.MapboxLayer({
+  id: "raster_gt100", type: lib.deck.BitmapLayer, image: [],
   textureParameters: {
-    [lumaconstants.GL.TEXTURE_MIN_FILTER]: lumaconstants.GL.NEAREST,
-    [lumaconstants.GL.TEXTURE_MAG_FILTER]: lumaconstants.GL.NEAREST
+    [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,
+    [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST
   }
 });
 ```
@@ -145,11 +153,7 @@ path_50to100 = selectedCertainties.includes("50to100") ?
 path_gt100 = selectedCertainties.includes("gt100") ?
     "/data/3-pngs/" + selectedCity + "_gt100pp.png" : null
 
-console.log("Path to load: " + path_0to25)
-console.log("Path to load: " + path_25to50)
-console.log("Path to load: " + path_50to100)
-console.log("Path to load: " + path_gt100)
-
+// update the layers with the selected city's file paths and bounds
 layer_0to25.setProps({ image: path_0to25, bounds: filteredCityBoundsDeckGL })
 layer_25to50.setProps({ image: path_25to50, bounds: filteredCityBoundsDeckGL })
 layer_50to100.setProps({ image: path_50to100, bounds: filteredCityBoundsDeckGL })
@@ -181,7 +185,7 @@ viewof map = {
 
   // on map load:
   // - dispatch its value back to ojs
-  // - add the deck.gl layer to the map
+  // - add the deck.gl layers to the map
   map.on("load", () => {
     container.value = map;
     container.dispatchEvent(new CustomEvent("input"));
