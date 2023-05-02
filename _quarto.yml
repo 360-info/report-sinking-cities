@@ -1,6 +1,9 @@
 project:
   type: website
   output-dir: out
+  render:
+    - analysis/preprocess.qmd
+    - map/index.qmd
   resources:
     - /data/3-pngs/*.png
     - data/map-bounds-extent.csv
