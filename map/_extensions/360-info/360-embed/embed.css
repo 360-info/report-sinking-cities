@@ -87,7 +87,7 @@ header#title-block-header {
 
   display: flex;
   flex-direction: column;
-  height: 160px;
+  height: 220px;
   gap: 5px;
 }
 

@@ -9,7 +9,7 @@ resources:
   - tiles/*/*/*.pbf
   - font/*
   - font/*/*
-  - testplot.png
+  - cross.png
 360embed:
   before: |
     &lt;iframe allow=&quot;fullscreen&quot; allowfullscreen=&quot;true&quot; src=&quot;
@@ -58,7 +58,7 @@ lib = {
 // load bounds data and extract city names
 cityBounds = FileAttachment("/data/map-bounds-extent.csv").csv({ typed: true })
 cityBoundsExtracted = cityBounds
-  .map(d => ({ ...d, city: d.filename.split("_")[0] }))
+  .map(d => ({...d, city: d.filename.split("_")[0] }))
 
 // get bounds of selected city
 // (there'll be duplicates; just grab the first)
@@ -78,7 +78,7 @@ filteredCityBoundsDeckGL = [
 // fly to the selected city whenever it changes (accounting for bottom bar)
 map.fitBounds(filteredCityBoundsMapbox, {
   linear: false,
-  offset: [0, -80]
+  offset: [0, 0]
   })
 ```
 
@@ -87,7 +87,7 @@ map.fitBounds(filteredCityBoundsMapbox, {
 //| classes: custom-title-block
 
 max_city_sink = Math.abs(Math.min(...filteredCityInfo.map(d => d.file_min)))
-map_title = md`# Sinking cities: ${selectedCity}`
+map_title = md`# Sinking cities: ${selectedCity.replace(/([A-Z])/g, ' $1').trim()}`
 map_subtitle = md`Measurements from researchers found that parts of the city are sinking by as much as **${max_city_sink * 100} cm per year.**` 
 ```
 
@@ -103,6 +103,8 @@ viewof selectedCity = Inputs.select(allCities, { label: "City" });
 viewof certaintyBound = Inputs.checkbox(["Show less precise estimates"])
 
 /* legend */
+
+refpointLegend = md`✚ Reference point`
 
 width = 25
 bins = 10
@@ -136,8 +138,7 @@ layer_0to25 = new lib.deck.MapboxLayer({
   textureParameters: {
     [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,
     [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST
-  },
-  // coordinateSystem: lib.deck.COORDINATE_SYSTEM.METER_OFFSETS
+  }
 });
 layer_25to50 = new lib.deck.MapboxLayer({
   id: "raster_25to50",
@@ -146,8 +147,7 @@ layer_25to50 = new lib.deck.MapboxLayer({
   textureParameters: {
     [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,
     [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST
-  },
-  // coordinateSystem: lib.deck.COORDINATE_SYSTEM.METER_OFFSETS
+  }
 });
 layer_50to100 = new lib.deck.MapboxLayer({
   id: "raster_50to100",
@@ -156,8 +156,7 @@ layer_50to100 = new lib.deck.MapboxLayer({
   textureParameters: {
     [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,
     [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST
-  },
-  // coordinateSystem: lib.deck.COORDINATE_SYSTEM.METER_OFFSETS
+  }
 });
 layer_gt100 = new lib.deck.MapboxLayer({
   id: "raster_gt100",
@@ -166,10 +165,26 @@ layer_gt100 = new lib.deck.MapboxLayer({
   textureParameters: {
     [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,
     [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST
-  },
-  // coordinateSystem: lib.deck.COORDINATE_SYSTEM.METER_OFFSETS
+  }
 });
 
+// add a layer for the reference points too
+layer_refpoints = new lib.deck.MapboxLayer({
+  id: "refpoints",
+  type: lib.deck.IconLayer,
+  data: cityBoundsExtracted,
+  getPosition: d => [d.ref_lon, d.ref_lat],
+  getColor: d => [0, 256, 128],
+  sizeScale: 50,
+  sizeUnits: "pixels",
+  getIcon: d => ({
+    url: "cross.png",
+    width: 48,
+    height: 48,
+    anchorX: 24,
+    anchorY: 24
+  })
+})
 
 ```
 
@@ -229,6 +244,7 @@ viewof map = {
     map.addLayer(layer_25to50);
     map.addLayer(layer_50to100);
     map.addLayer(layer_gt100);
+    map.addLayer(layer_refpoints)
 
     // TODO - opacity not working
     // map.setPaintProperty("raster_25to50", "raster-opacity", 0.75)
