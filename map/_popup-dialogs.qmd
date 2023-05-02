@@ -20,7 +20,7 @@ micro.init({
 
 These charts, as well as the analyses that underpin them, are available under a [**Creative Commons Attribution 4.0 licence**](https://creativecommons.org/licenses/by/4.0).
 
-Please acknowledge [360info](https://360info.org) and our data sources when you use these charts and data.
+Please acknowledge [360info](https://360info.org) and [Tay et al 2022](https://doi.org/10.1038/s41893-022-00947-z) when you use these charts and data.
 
 #### Embed this chart in your article
 
@@ -37,10 +37,10 @@ This content is subject to [360info's Terms of Use](https://newshub.360info.org/
 
 #### Get the data and code
 
-Visit the [GitHub repository](https://github.com/360-info/report-template/tree/main/data) to:
+Visit the [GitHub repository](https://github.com/360-info/report-sinking-cities/tree/main/data) to:
 
-* [**Download the data**](https://github.com/360-info/report-template/tree/main/data)
-* [**Recreate or remix the chart**](https://github.com/360-info/report-template)
+* [**Download the data**](https://github.com/360-info/report-sinking-cities/tree/main/data)
+* [**Recreate or remix the chart**](https://github.com/360-info/report-sinking-cities)
 ::::
 
 :::::
@@ -60,7 +60,21 @@ Visit the [GitHub repository](https://github.com/360-info/report-template/tree/m
 </header>
 
 :::: {#modal-about-content}
-This is a great place to add some more notes on the data!
+
+As many cities develop, they often respond to growing water demand with groundwater extraction. This leads to the phenomenon of **land subsistence**: as the water is pumped to the surface, the land beneath settles lower. Oil and gas drilling and manic construction are also culprits.
+
+Data from [Tay et al 2022](https://doi.org/10.1038/s41893-022-00947-z) shows that many of the most populous coastal cities, shown on this map, are suffering from subsistence on a scale of centimetres every year.
+
+Not all cities are sinking at the same rate, and not all _parts_ of a city sink equally. Areas shown in red are where a city's most intense subsistence is taking place.
+
+Global sea rise is not shown on this map - it is occurring on top of the land subsistence you see here. Cities will have to contend with both in order to protect their residents.
+
+### Methodology
+
+The authors of this study used a type of radar called **interferometric synthetic aperture radar**, or InSAR. Some parts of the city that were not directly measured by InSAR were interpolated, or filled in statistically.
+
+Some parts of the data are less precisely estimated than others. Use the checkbox in the lower left to screen out areas with less precise measurements (more than 25% normalised standard deviation).
+
 ::::
 
 :::::

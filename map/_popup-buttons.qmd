@@ -61,7 +61,7 @@
   (if there isn't room, put it in the ABOUT dialog) -->
 James Goldie, 360info
 
-Data: IRENA
+Data: Tay et al 2022
 
 ::::
 
@@ -95,9 +95,17 @@ Data: IRENA
     
       edshareBtn.addEventListener("click", () => {
 
+        // figure out if we have a city to add to the link
+        cityChoice = pageURL.searchParams.get("city");
+  
+        cityChoiceParam = (cityChoice !== null) ? "&city=" + cityChoice : ""
+        
+
         // copy the embed code to the clipboard
         navigator.clipboard.writeText(
-          `{{< meta 360embed.before >}}{{< meta 360embed.url >}}{{< meta 360embed.after >}}`);
+          `{{< meta 360embed.before >}}{{< meta 360embed.url >}}` +
+          cityChoiceParam +
+          `{{< meta 360embed.after >}}`);
 
         // update button styles and content
         edshareBtn.classList.remove("ready");

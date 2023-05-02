@@ -174,6 +174,47 @@ city_maps_masked
 
 We also need to convert these TIFFs to PNGs for web display, and we need to run off their extents (along with the reference point KMLs) as a data frame to help us fit the PNGs on the map.
 
+But before we do that, we're going to reproject everything in `data/2-masked` to EPSG:3857 to see if it helps us reconcile Mapbox and DeckGL:
+
+```{r}
+#| label: fn-reproject
+# reproject_to_3857: read in a raster path and write back out reprojected
+reproject_to_3857 <- function(path) {
+  out_path <- here("data", "2a-masked-3857", basename(path))
+  project(rast(path), "epsg:3857", gdal = FALSE, filename = out_path,
+    overwrite = TRUE)
+  return(out_path)
+}
+```
+We'll use this function in a moment, before we get the map bounds (reprojected).
+
+First, let's get the reference points:
+
+```{r}
+#| label: get-reference-points
+
+tibble(
+  path = list.files(here("data", "src"), pattern = glob2rx("*.kml"),
+    full.names = TRUE),
+  fname = basename(path)) %>%
+  separate(fname, into = c("city", "code", "ref"), sep = "_", remove = FALSE) %>%
+  select(-code, -ref) %>%
+  group_by(city) %>%
+  # read kml files in
+  summarise(point = st_read(path)) %>%
+  unpack(point) %>%
+  # extract lat and lon
+  mutate(
+    coord = st_coordinates(geometry),
+    ref_lon = coord[, "X"],
+    ref_lat = coord[, "Y"]) %>%
+  select(city, ref_lon, ref_lat) %>%
+  print() ->
+reference_points
+```
+
+Now, here's a function to extract the domain and range of the raster file:
+
 ```{r}
 #| label: fn-get-range-bounds
 # get_range_bounds: given a raster path, return a list containing:
@@ -201,22 +242,32 @@ get_range_bounds <- function(path) {
 }
 ``` 
 
+Let's bring all that info together:
+
 ```{r extents}
 #| label: export-extents-ranges-and-reference-points
+dir.create(here("data", "2a-masked-3857"), showWarnings = FALSE)
+
 city_maps_masked %>%
   pivot_longer(starts_with("masked"), names_to = "measure",
     values_to = "path") %>%
+  mutate(reprojected_path = map_chr(path, reproject_to_3857)) ->
+city_maps_reprojected
+
+city_maps_reprojected %>%
   mutate(
-    range_bounds = map(path, get_range_bounds),
+    range_bounds_latlon = map(path, get_range_bounds),
+    range_bounds_3857 = map(reprojected_path, get_range_bounds),
     measure = str_remove(measure, "masked_path_"),
-    filename = basename(path)) %>%
-  unnest_wider(range_bounds) ->
+    filename = basename(reprojected_path)) %>%
+  unnest_wider(range_bounds_latlon) %>%
+  rename(lon_min = xmin, lon_max = xmax, lat_min = ymin, lat_max = ymax) %>%
+  select(-min, -max) %>%
+  unnest_wider(range_bounds_3857) %>%
+  # finally, merge in reference point data
+  left_join(reference_points, by = join_by(city_name == city),
+    multiple = "all") ->
 city_maps_info
-  
-# export to csv (dropping paths)
-city_maps_info %>%
-  select(filename, min, max, xmin, xmax, ymin, ymax) %>%
-  write_csv(here("data", "map-bounds-extent.csv"))
 ```
 
 We want to ensure all the maps are made using a common, symmetrical colour scale.
@@ -229,15 +280,15 @@ dir.create(here("data", "3-pngs"), showWarnings = FALSE)
 
 # first, we need to settle on a common range that encompasses all the files
 # (and make it symmetrical around 0)
-data_range <- c(
-  min(city_maps_info$min, na.rm = TRUE),
-  max(city_maps_info$max, na.rm = TRUE)) %>%
-  abs() %>%
-  max()
+# data_range <- c(
+#   min(city_maps_info$min, na.rm = TRUE),
+#   max(city_maps_info$max, na.rm = TRUE)) %>%
+#   abs() %>%
+#   max()
 
 # compute breaks based on that range
-number_colours <- 10
-palette_breaks <- seq(-data_range, data_range, length.out = number_colours + 1)
+# number_colours <- 10
+# palette_breaks <- seq(-data_range, data_range, length.out = number_colours + 1)
 ```
 
 Here's our plotting function:
@@ -246,10 +297,24 @@ Here's our plotting function:
 #| label: fn-plot-raster-png
 
 # plot_raster_png: save the raster as a png (using tidyterra to make applying
-# a common scale across files much easier)
-plot_raster_png <- function(path) {
+# a common colour scale across files much easier).
+# note: we really need to ensure that the png's aspect ratio reflects the extent
+# of the tiff in order to get decent projection on the interactive map. i've
+# reprojected the tiff to web mercator (epsg:3857) JUST for apsect ratio
+# calculation.
+plot_raster_png <- function(path, palette_breaks) {
 
   vel <- rast(path)
+  vel_3857 <- project(vel, "epsg:3857")
+
+  # this might not work well because of polar distortion, but in lieu of
+  # knowing the actual panel aspect ratio, i'm going to work it out from the
+  # raster extent and see if it's a better fit than these square plots with
+  # lots of padding
+  vel_ext_3857 <- ext(vel_3857)
+  aspect_ratio_3857 <-
+    (vel_ext_3857[2] - vel_ext_3857[1]) /
+    (vel_ext_3857[4] - vel_ext_3857[3])
 
   # use zero scale expansion + void theme to remove margins
   vel_plot <- ggplot() +
@@ -263,7 +328,8 @@ plot_raster_png <- function(path) {
       # (and force all of them to be used)
       breaks = palette_breaks,
       limits = range(palette_breaks),
-      guide = NULL) +
+      guide = NULL
+      ) +
     # push plot out to edges of the panel
     scale_x_continuous(expand = expansion(0, 0)) +
     scale_y_continuous(expand = expansion(0, 0)) +
@@ -273,10 +339,14 @@ plot_raster_png <- function(path) {
       plot.background = element_blank(),
       panel.background = element_blank())
 
+
+  # write to disk, varying the plot height based on the epsg:3857 aspect ratio
   ggsave(
     here("data", "3-pngs", str_replace(basename(path), ".tif$", ".png")),
     vel_plot,
-    dpi = 72)
+    width = 800,
+    height = 800 / aspect_ratio_3857,
+    units = "px")
 
 }
 ```
@@ -285,7 +355,26 @@ Let's do the export on each processed TIF now:
 
 ```{r}
 #| label: export-pngs
+
+number_colours <- 10
+
 city_maps_info %>%
-  pull(path) %>%
-  walk(plot_raster_png)
+  # compute city-specific ranges for the colour palettes
+  group_by(city_name) %>%
+  mutate(
+    city_min = min(min, na.rm = TRUE),
+    city_max = max(max, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(
+    palette_max_abs = pmax(abs(city_min), abs(city_max)),
+    city_breaks = map(palette_max_abs,
+      ~ seq(-.x, .x, length.out = number_colours + 1)),
+    walk2(path, city_breaks, plot_raster_png)
+    ) %>%
+  # export to csv (dropping paths)
+  select(filename, ref_lon, ref_lat, file_min = min, file_max = max,
+    palette_extent = palette_max_abs, lon_min, lon_max, lat_min, lat_max, xmin,
+    xmax, ymin, ymax) %>%
+  write_csv(here("data", "map-bounds-extent.csv"))
+
 ```
