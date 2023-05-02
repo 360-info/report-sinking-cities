@@ -14,8 +14,7 @@ resources:
   before: |
     &lt;iframe allow=&quot;fullscreen&quot; allowfullscreen=&quot;true&quot; src=&quot;
   # uncomment and modify this line for production
-  # url: https://may2023.360info-sinking-cities.pages.dev/news/
-  url: example.com
+  url: https://may2023.360info-sinking-cities.pages.dev/map/
   after: |
     &quot; title=&quot;Interactive: future heat&quot; style=&quot;width:100%; height:500px; border:none; background-color: white;&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;
 ---
