@@ -15,11 +15,13 @@ a:visited {
 
 #custom-title-block {
   position: absolute;
+  margin-right: 160px;
   top: 0;
   left: 0;
   padding: 10px;
   z-index: 1000;
   color: white;
+  background: #00000088;
 }
 
 #custom-title-block h1,
@@ -30,29 +32,24 @@ a:visited {
 #custom-title-block h1 {
   text-transform: uppercase;
   font-weight: 900;
-  margin-block-end: 0;
   margin-block-end: 0.2em;
 }
 
 #custom-title-block p {
   font-weight: 400;
+  margin-block-end: 0;
 }
 
-
-header#title-block-header {
-  margin-block-end: 0.5rem;
-  z-index: 1000;
-}
 
 /* shrink header elements at lower widths */
 @media (max-width: 45em) {
-  header#title-block-header {
+  #custom-title-block {
     font-size: 90%;
   }
 }
 
 @media (max-width: 34em) {
-  header#title-block-header {
+  #custom-title-block {
     font-size: 80%;
   }
 }

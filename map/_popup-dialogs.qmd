@@ -75,6 +75,8 @@ The authors of this study used a type of radar called **interferometric syntheti
 
 Some parts of the data are less precisely estimated than others. Use the checkbox in the lower left to screen out areas with less precise measurements (more than 25% normalised standard deviation).
 
+The city subsistence areas presented here have been reprojected for display on an interactive map, and they may not line up exactly with the underlying map. For georeferenced versions of this data, see [our GitHub repository](https://github.com/360-info/report-sinking-cities).
+
 ::::
 
 :::::

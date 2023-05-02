@@ -86,8 +86,9 @@ map.fitBounds(filteredCityBoundsMapbox, {
 //| classes: custom-title-block
 
 max_city_sink = Math.abs(Math.min(...filteredCityInfo.map(d => d.file_min)))
-map_title = md`# Sinking cities: ${selectedCity.replace(/([A-Z])/g, ' $1').trim()}`
-map_subtitle = md`Measurements from researchers found that parts of the city are sinking by as much as **${max_city_sink * 100} cm per year.**` 
+cityLabel = selectedCity.replace(/([A-Z])/g, ' $1').replace(",", " ").trim()
+map_title = md`# Sinking cities: ${cityLabel}`
+map_subtitle = md`Measurements from researchers found that parts of the city are sinking by as much as **${(max_city_sink * 100).toFixed(1)} cm per year.**` 
 ```
 
 ```{ojs}
@@ -120,17 +121,17 @@ width = 25
 bins = 10
 legend =
   svg`<svg height="65px" width="${width * bins}px">
-    <text fill="black" y=15 text-anchor="start" x=0>Sinking</text>
+    <text fill="black" y=15 text-anchor="start" x=0>Land sinking</text>
     <text fill="black" y=15 text-anchor="end" x=${width * bins}>
-      Rising
+      Land rising
     </text>
     ${d3.schemeRdYlBu[bins].map(
       (colour, i) => svg`<rect height=15 y=23 width=${width}
         x=${width * i} fill="${colour}"></rect>`
     )}
-    <text fill="black" y=55 text-anchor="start" x=0>-${filteredCityInfo[0].palette_extent * 100} cm/yr</text>
+    <text fill="black" y=55 text-anchor="start" x=0>-${(filteredCityInfo[0].palette_extent * 100).toFixed(1)} cm/yr</text>
     <text fill="black" y=55 text-anchor="end" x=${width * bins}>
-      +${filteredCityInfo[0].palette_extent * 100} cm/yr
+      +${(filteredCityInfo[0].palette_extent * 100).toFixed(1)} cm/yr
     </text>
   </svg>`
 ```
