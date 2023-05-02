@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="James Goldie">
+<meta name="dcterms.date" content="2023-05-02">
+
+<title>Pre-process</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body>
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Pre-process</h1>
+<p class="subtitle lead">A slightly longer title</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>James Goldie </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 2, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Observed and interpolated subsistence rates are available for each city as geoTIFFs from <a href="https://researchdata.ntu.edu.sg/dataset.xhtml?persistentId=doi:10.21979/N9/GPVX0F">NTU Dataverse</a>.</p>
+<p>Although some Dataverse instances have an API, I couldn’t verify that this one does. Instead, you can <a href="https://researchdata.ntu.edu.sg/dataset.xhtml?persistentId=doi:10.21979/N9/GPVX0F">download the dataset manually</a> and place it in <code>/data</code> as <code>dataverse_files.zip</code>.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>terra 1.7.29
+
+Attaching package: 'terra'
+
+The following object is masked from 'package:tidyr':
+
+    extract</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyterra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'tidyterra'
+
+The following object is masked from 'package:stats':
+
+    filter</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>here() starts at /workspaces/report-sinking-cities</code></pre>
+</div>
+</div>
+<p>Let’s first unzip the dataverse files:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># unzip the downloaded dataverse zip</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"dataverse_files.zip"</span>),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">exdir =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"src"</span>))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># unzip each city</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"src"</span>), <span class="at">pattern =</span> <span class="fu">glob2rx</span>(<span class="st">"*.zip"</span>),</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">full.names =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">walk</span>(unzip, <span class="at">exdir =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"src"</span>))</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># delete the city zip files</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"src"</span>, <span class="st">"*.zip"</span>), <span class="at">expand =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Each city has four geoTIFFs:</p>
+<ul>
+<li><code>velocity_InSAR</code>: the subsistence velocity observed using InSAR;</li>
+<li><code>velocity_interpolation</code>: the subsistence velocity interpolated between observations;</li>
+<li><code>velocityStd_InSAR</code>: the standard deviation of the observed velocity; and</li>
+<li><code>velocityStd_interpolation</code>: the standard deviation of the interpolated velocity.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>the velocities and standard deviations of them are both in units of m yr<sup>-1</sup>. The paper’s figures present them in units of mm yr<sup>-1</sup>.</p>
+</div>
+</div>
+<p>For each city, I want to:</p>
+<ol type="1">
+<li>Combine the two velocity maps and the two SD maps;</li>
+<li>Calculate a normalised standard deviation</li>
+<li>Mask the combined velocity map using bins of the combined SD map.</li>
+</ol>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="fu">list.files</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"src"</span>), <span class="at">pattern =</span> <span class="fu">glob2rx</span>(<span class="st">"*.tif"</span>),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">full.names =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">fname =</span> <span class="fu">str_remove</span>(<span class="fu">basename</span>(path), <span class="st">".tif"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># discard the area bmsl files</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(fname, <span class="st">"areaBMSL"</span>, <span class="at">negate =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># extract filename info</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(fname,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"city_name"</span>, <span class="st">"city_code"</span>, <span class="st">"measure"</span>, <span class="st">"source"</span>),</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">sep =</span> <span class="st">"_"</span>) <span class="ot">-&gt;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>city_maps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We’ll need to use <code>{terra}</code> or a similar raster package to do the above two tasks.</p>
+<p>First, we need functions to do the two tasks above:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># combine_maps: load two geotiff paths in, merge and write back to disk.</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># return the output path</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>combine_maps <span class="ot">&lt;-</span> <span class="cf">function</span>(path_a, path_b, city, measure) {</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  out_path <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"1-combined"</span>, <span class="fu">paste0</span>(city, <span class="st">"_"</span>, measure, <span class="st">".tif"</span>))</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">merge</span>(<span class="fu">rast</span>(path_a), <span class="fu">rast</span>(path_b), <span class="at">filename =</span> out_path, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out_path)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>get_norm_sd <span class="ot">&lt;-</span> <span class="cf">function</span>(velocity_path, sd_path, city) {</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  out_path <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"1-combined"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(city, <span class="st">"_velocityNormStd"</span>, <span class="st">".tif"</span>))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  norm_sd <span class="ot">&lt;-</span> <span class="fu">rast</span>(sd_path) <span class="sc">/</span> <span class="fu">rast</span>(velocity_path)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">writeRaster</span>(norm_sd, out_path, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out_path)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mask_map: given a velocity raster and a normalised std deviation path,</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># clip the velocities to only contain cells with normalised SD within an</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># absolute range of low to high. return the path of the result (written to disk)</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>mask_map <span class="ot">&lt;-</span> <span class="cf">function</span>(velocity_path, normsd_path, low, high, city, thresh_label) {</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  out_path <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"2-masked"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(city, <span class="st">"_"</span>, thresh_label, <span class="st">"p.tif"</span>))</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  vel <span class="ot">&lt;-</span> <span class="fu">rast</span>(velocity_path)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  normsd <span class="ot">&lt;-</span> <span class="fu">rast</span>(normsd_path)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get an absolute value of the normalised sd</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  abs_normsd <span class="ot">&lt;-</span> <span class="fu">ifel</span>(normsd <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="sc">-</span>normsd, normsd)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># first mask the normalised sd to within the absolute threshold</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  normsd_thresh <span class="ot">&lt;-</span> <span class="fu">ifel</span>(abs_normsd <span class="sc">&gt;</span> high <span class="sc">|</span> abs_normsd <span class="sc">&lt;</span> low, <span class="cn">NA</span>, abs_normsd)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># then mask the velocity map based on the remaining normalised sd map</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(vel, normsd_thresh, <span class="at">filename =</span> out_path, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out_path)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"1-combined"</span>), <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"2-masked"</span>), <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>city_maps <span class="sc">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(city_name, measure) <span class="sc">%&gt;%</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span><span class="al">TODO</span><span class="co"> - assert two rows per group</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">path =</span> <span class="fu">combine_maps</span>(path[<span class="dv">1</span>], </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>      path[<span class="dv">2</span>], city_name[<span class="dv">1</span>], measure[<span class="dv">1</span>])) <span class="sc">%&gt;%</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="ot">-&gt;</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>city_maps_combined</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'city_name'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the normalised standard deviations</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>city_maps_combined <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ensure velocity is first in each group and sd is second</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(measure) <span class="sc">%&gt;%</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(city_name) <span class="sc">%&gt;%</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">path =</span> <span class="fu">get_norm_sd</span>(path[<span class="dv">1</span>], path[<span class="dv">2</span>], city_name[<span class="dv">1</span>])) <span class="sc">%&gt;%</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">measure =</span> <span class="st">"velocityNormStd"</span>) <span class="ot">-&gt;</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>city_norm_sds</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co"># combine the normalised standard velocities with the velocities (drop the sds)</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>city_maps_combined <span class="sc">%&gt;%</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(measure <span class="sc">==</span> <span class="st">"velocity"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(city_norm_sds) <span class="sc">%&gt;%</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(city_name, measure) <span class="ot">-&gt;</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>city_maps_all</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="co"># now do the masking, in bins of normalised standard deviation:</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 0-25%, 25-50%, 50-1005, &gt; 100%</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>city_maps_all <span class="sc">%&gt;%</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(city_name) <span class="sc">%&gt;%</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">masked_path_0to25p =</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mask_map</span>(path[<span class="dv">1</span>], path[<span class="dv">2</span>], <span class="dv">0</span>,    <span class="fl">0.25</span>, city_name[<span class="dv">1</span>], <span class="st">"0to25p"</span>),</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">masked_path_25to50p =</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mask_map</span>(path[<span class="dv">1</span>], path[<span class="dv">2</span>], <span class="fl">0.25</span>, <span class="fl">0.5</span>,  city_name[<span class="dv">1</span>], <span class="st">"25to50p"</span>),</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">masked_path_50to100p =</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mask_map</span>(path[<span class="dv">1</span>], path[<span class="dv">2</span>], <span class="fl">0.5</span>,  <span class="dv">1</span>,    city_name[<span class="dv">1</span>], <span class="st">"50to100p"</span>),</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">masked_path_gt100p =</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mask_map</span>(path[<span class="dv">1</span>], path[<span class="dv">2</span>], <span class="dv">1</span>,    <span class="cn">Inf</span>,  city_name[<span class="dv">1</span>], <span class="st">"gt100p"</span>)) <span class="ot">-&gt;</span></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>city_maps_masked</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We also need to convert these TIFFs to PNGs for web display, and we need to run off their extents (along with the reference point KMLs) as a data frame to help us fit the PNGs on the map.</p>
+<p>But before we do that, we’re going to reproject everything in <code>data/2-masked</code> to EPSG:3857 to see if it helps us reconcile Mapbox and DeckGL:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reproject_to_3857: read in a raster path and write back out reprojected</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>reproject_to_3857 <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  out_path <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"2a-masked-3857"</span>, <span class="fu">basename</span>(path))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">project</span>(<span class="fu">rast</span>(path), <span class="st">"epsg:3857"</span>, <span class="at">gdal =</span> <span class="cn">FALSE</span>, <span class="at">filename =</span> out_path,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out_path)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We’ll use this function in a moment, before we get the map bounds (reprojected).</p>
+<p>First, let’s get the reference points:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="fu">list.files</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"src"</span>), <span class="at">pattern =</span> <span class="fu">glob2rx</span>(<span class="st">"*.kml"</span>),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">full.names =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">fname =</span> <span class="fu">basename</span>(path)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(fname, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"city"</span>, <span class="st">"code"</span>, <span class="st">"ref"</span>), <span class="at">sep =</span> <span class="st">"_"</span>, <span class="at">remove =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>code, <span class="sc">-</span>ref) <span class="sc">%&gt;%</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(city) <span class="sc">%&gt;%</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># read kml files in</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">point =</span> <span class="fu">st_read</span>(path)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unpack</span>(point) <span class="sc">%&gt;%</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># extract lat and lon</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">coord =</span> <span class="fu">st_coordinates</span>(geometry),</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">ref_lon =</span> coord[, <span class="st">"X"</span>],</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">ref_lat =</span> coord[, <span class="st">"Y"</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(city, ref_lon, ref_lat) <span class="sc">%&gt;%</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>() <span class="ot">-&gt;</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>reference_points</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Abidjan_TA118_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: -4.04875 ymin: 5.45625 xmax: -4.04875 ymax: 5.45625
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Ahmedabad_TD034_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 72.66875 ymin: 23.06875 xmax: 72.66875 ymax: 23.06875
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Alexandria_TD065_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 29.81792 ymin: 30.99958 xmax: 29.81792 ymax: 30.99958
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Bangkok_TD062_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 100.6546 ymin: 13.76625 xmax: 100.6546 ymax: 13.76625
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Barcelona_TA132_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 2.13375 ymin: 41.41125 xmax: 2.13375 ymax: 41.41125
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/BuenosAires_TD170_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: -58.52125 ymin: -34.61208 xmax: -58.52125 ymax: -34.61208
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Chennai_TD092_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 80.11792 ymin: 13.18375 xmax: 80.11792 ymax: 13.18375
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Chittagong_TD077_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 91.83208 ymin: 22.37458 xmax: 91.83208 ymax: 22.37458
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Dalian_TA098_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 121.9987 ymin: 39.32875 xmax: 121.9987 ymax: 39.32875
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/DaresSalaam_TD006_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 39.16292 ymin: -6.837917 xmax: 39.16292 ymax: -6.837917
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Dhaka_TD150_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 90.42208 ymin: 23.80792 xmax: 90.42208 ymax: 23.80792
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Dongguan_TA011_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 114.0354 ymin: 22.95792 xmax: 114.0354 ymax: 22.95792
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Foshan_TA011_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 113.0962 ymin: 23.09625 xmax: 113.0962 ymax: 23.09625
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Fukuoka_TD163_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 130.6696 ymin: 33.61875 xmax: 130.6696 ymax: 33.61875
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Guangzhou_TA011_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 113.3004 ymin: 23.23625 xmax: 113.3004 ymax: 23.23625
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Hangzhou_TA069_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 120.2229 ymin: 29.96792 xmax: 120.2229 ymax: 29.96792
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/HoChiMinhCity_TD018_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 106.5921 ymin: 10.81708 xmax: 106.5921 ymax: 10.81708
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/HongKong_TA011_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 114.1729 ymin: 22.51542 xmax: 114.1729 ymax: 22.51542
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Houston_TD143_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: -95.27125 ymin: 29.79958 xmax: -95.27125 ymax: 29.79958
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Istanbul_TD138_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 28.87042 ymin: 41.08625 xmax: 28.87042 ymax: 41.08625
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Jakarta_TA098_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 106.8754 ymin: -6.34125 xmax: 106.8754 ymax: -6.34125
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Karachi_TD078_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 67.15625 ymin: 24.93458 xmax: 67.15625 ymax: 24.93458
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Kolkata_TD048_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 88.47875 ymin: 22.72208 xmax: 88.47875 ymax: 22.72208
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Lagos_TD095_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 3.30625 ymin: 6.62125 xmax: 3.30625 ymax: 6.62125
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Lima_TD069_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: -76.95958 ymin: -12.04958 xmax: -76.95958 ymax: -12.04958
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/London_TD081_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: -0.07458351 ymin: 51.54708 xmax: -0.07458351 ymax: 51.54708
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/LosAngeles_TD071_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: -118.2438 ymin: 34.04292 xmax: -118.2438 ymax: 34.04292
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Luanda_TA131_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 13.40458 ymin: -9.064583 xmax: 13.40458 ymax: -9.064583
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Manila_TD032_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 120.9929 ymin: 14.70208 xmax: 120.9929 ymax: 14.70208
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Miami_TA048_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: -80.29625 ymin: 25.76542 xmax: -80.29625 ymax: 25.76542
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Mumbai_TD034_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 72.84542 ymin: 19.18292 xmax: 72.84542 ymax: 19.18292
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Nagoya_TD119_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 137.0104 ymin: 35.17458 xmax: 137.0104 ymax: 35.17458
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Nanjing_TA069_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 119.0237 ymin: 31.64292 xmax: 119.0237 ymax: 31.64292
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/NewYork_TA033_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: -73.85958 ymin: 40.72792 xmax: -73.85958 ymax: 40.72792
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Osaka_TD017_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 135.6787 ymin: 34.78958 xmax: 135.6787 ymax: 34.78958
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Philadelphia_TA106_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: -75.15958 ymin: 40.06292 xmax: -75.15958 ymax: 40.06292
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Qingdao_TD076_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 120.0229 ymin: 36.75458 xmax: 120.0229 ymax: 36.75458
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/RiodeJaneiro_TD155_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: -43.34958 ymin: -22.80792 xmax: -43.34958 ymax: -22.80792
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/SaintPetersburg_TD007_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 30.31542 ymin: 59.86292 xmax: 30.31542 ymax: 59.86292
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Seoul_TD134_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 126.9987 ymin: 37.59042 xmax: 126.9987 ymax: 37.59042
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Shanghai_TA171_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 121.2712 ymin: 31.02792 xmax: 121.2712 ymax: 31.02792
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Singapore_TD018_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 103.8737 ymin: 1.377917 xmax: 103.8737 ymax: 1.377917
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Surat_TD034_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 72.87542 ymin: 21.17458 xmax: 72.87542 ymax: 21.17458
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Suzhou_TA171_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 120.5137 ymin: 31.31458 xmax: 120.5137 ymax: 31.31458
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Tianjin_TD149_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 117.2537 ymin: 39.75875 xmax: 117.2537 ymax: 39.75875
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Tokyo_TD046_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 139.3146 ymin: 35.77458 xmax: 139.3146 ymax: 35.77458
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Washington,D.C._TA004_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: -77.02292 ymin: 38.90625 xmax: -77.02292 ymax: 38.90625
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+Reading layer `referencepoint' from data source 
+  `/workspaces/report-sinking-cities/data/src/Yangon_TD033_referencePoint.kml' 
+  using driver `LIBKML'
+Simple feature collection with 1 feature and 12 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 96.13542 ymin: 16.95708 xmax: 96.13542 ymax: 16.95708
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84
+# A tibble: 48 × 3
+   city        ref_lon ref_lat
+   &lt;chr&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+ 1 Abidjan       -4.05    5.46
+ 2 Ahmedabad     72.7    23.1 
+ 3 Alexandria    29.8    31.0 
+ 4 Bangkok      101.     13.8 
+ 5 Barcelona      2.13   41.4 
+ 6 BuenosAires  -58.5   -34.6 
+ 7 Chennai       80.1    13.2 
+ 8 Chittagong    91.8    22.4 
+ 9 Dalian       122.     39.3 
+10 DaresSalaam   39.2    -6.84
+# ℹ 38 more rows</code></pre>
+</div>
+</div>
+<p>Now, here’s a function to extract the domain and range of the raster file:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get_range_bounds: given a raster path, return a list containing:</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   - the `min` and `max` values of the raster band</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   - the </span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>get_range_bounds <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># open raster and get summary and extent</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  vel <span class="ot">&lt;-</span> <span class="fu">rast</span>(path)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  vel_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(vel)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># extract raster range from summary</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  vel_min <span class="ot">&lt;-</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    vel_summary <span class="sc">%&gt;%</span> <span class="fu">pluck</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span> <span class="fu">str_remove</span>(<span class="st">"Min.   :"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.numeric</span>()</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  vel_max <span class="ot">&lt;-</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    vel_summary <span class="sc">%&gt;%</span> <span class="fu">pluck</span>(<span class="dv">6</span>) <span class="sc">%&gt;%</span> <span class="fu">str_remove</span>(<span class="st">"Max.   :"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.numeric</span>()</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">min =</span> vel_min,</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">max =</span> vel_max,</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin =</span> <span class="fu">xmin</span>(vel),</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmax =</span> <span class="fu">xmax</span>(vel),</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymin =</span> <span class="fu">ymin</span>(vel),</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax =</span> <span class="fu">ymax</span>(vel)))</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Let’s bring all that info together:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"2a-masked-3857"</span>), <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>city_maps_masked <span class="sc">%&gt;%</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">starts_with</span>(<span class="st">"masked"</span>), <span class="at">names_to =</span> <span class="st">"measure"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"path"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">reprojected_path =</span> <span class="fu">map_chr</span>(path, reproject_to_3857)) <span class="ot">-&gt;</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>city_maps_reprojected</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>city_maps_reprojected <span class="sc">%&gt;%</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">range_bounds_latlon =</span> <span class="fu">map</span>(path, get_range_bounds),</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">range_bounds_3857 =</span> <span class="fu">map</span>(reprojected_path, get_range_bounds),</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">measure =</span> <span class="fu">str_remove</span>(measure, <span class="st">"masked_path_"</span>),</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">filename =</span> <span class="fu">basename</span>(reprojected_path)) <span class="sc">%&gt;%</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_wider</span>(range_bounds_latlon) <span class="sc">%&gt;%</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">lon_min =</span> xmin, <span class="at">lon_max =</span> xmax, <span class="at">lat_min =</span> ymin, <span class="at">lat_max =</span> ymax) <span class="sc">%&gt;%</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>min, <span class="sc">-</span>max) <span class="sc">%&gt;%</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_wider</span>(range_bounds_3857) <span class="sc">%&gt;%</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># finally, merge in reference point data</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(reference_points, <span class="at">by =</span> <span class="fu">join_by</span>(city_name <span class="sc">==</span> city),</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">multiple =</span> <span class="st">"all"</span>) <span class="ot">-&gt;</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>city_maps_info</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There were 328 warnings in `mutate()`.
+The first warning was:
+ℹ In argument: `range_bounds_latlon = map(path, get_range_bounds)`.
+Caused by warning:
+! [summary] used a sample
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 327 remaining warnings.</code></pre>
+</div>
+</div>
+<p>We want to ensure all the maps are made using a common, symmetrical colour scale. To do that, I’ll get a range that covers all of the cities’ data ranges, and I’ll push it out so that it’s symmetrical around zero:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"3-pngs"</span>), <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># first, we need to settle on a common range that encompasses all the files</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># (and make it symmetrical around 0)</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># data_range &lt;- c(</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   min(city_maps_info$min, na.rm = TRUE),</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   max(city_maps_info$max, na.rm = TRUE)) %&gt;%</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   abs() %&gt;%</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   max()</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co"># compute breaks based on that range</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co"># number_colours &lt;- 10</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co"># palette_breaks &lt;- seq(-data_range, data_range, length.out = number_colours + 1)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Here’s our plotting function:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_raster_png: save the raster as a png (using tidyterra to make applying</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># a common colour scale across files much easier).</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># note: we really need to ensure that the png's aspect ratio reflects the extent</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># of the tiff in order to get decent projection on the interactive map. i've</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># reprojected the tiff to web mercator (epsg:3857) JUST for apsect ratio</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># calculation.</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>plot_raster_png <span class="ot">&lt;-</span> <span class="cf">function</span>(path, palette_breaks) {</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  vel <span class="ot">&lt;-</span> <span class="fu">rast</span>(path)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  vel_3857 <span class="ot">&lt;-</span> <span class="fu">project</span>(vel, <span class="st">"epsg:3857"</span>)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># this might not work well because of polar distortion, but in lieu of</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># knowing the actual panel aspect ratio, i'm going to work it out from the</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># raster extent and see if it's a better fit than these square plots with</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># lots of padding</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  vel_ext_3857 <span class="ot">&lt;-</span> <span class="fu">ext</span>(vel_3857)</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  aspect_ratio_3857 <span class="ot">&lt;-</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>    (vel_ext_3857[<span class="dv">2</span>] <span class="sc">-</span> vel_ext_3857[<span class="dv">1</span>]) <span class="sc">/</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    (vel_ext_3857[<span class="dv">4</span>] <span class="sc">-</span> vel_ext_3857[<span class="dv">3</span>])</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># use zero scale expansion + void theme to remove margins</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>  vel_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_spatraster</span>(<span class="at">data =</span> vel) <span class="sc">+</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_fermenter</span>(</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"div"</span>,</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">palette =</span> <span class="st">"RdYlBu"</span>,</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">direction =</span> <span class="dv">1</span>,</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">na.value =</span> <span class="cn">NA</span>,</span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>      <span class="co"># use `breaks` and `limits` to supply our common breaks</span></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>      <span class="co"># (and force all of them to be used)</span></span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> palette_breaks,</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">limits =</span> <span class="fu">range</span>(palette_breaks),</span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">guide =</span> <span class="cn">NULL</span></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># push plot out to edges of the panel</span></span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove backgrounds and other elements</span></span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.background =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>  <span class="co"># write to disk, varying the plot height based on the epsg:3857 aspect ratio</span></span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(</span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"3-pngs"</span>, <span class="fu">str_replace</span>(<span class="fu">basename</span>(path), <span class="st">".tif$"</span>, <span class="st">".png"</span>)),</span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>    vel_plot,</span>
+<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="dv">800</span>,</span>
+<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">height =</span> <span class="dv">800</span> <span class="sc">/</span> aspect_ratio_3857,</span>
+<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">units =</span> <span class="st">"px"</span>)</span>
+<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Let’s do the export on each processed TIF now:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>number_colours <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>city_maps_info <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># compute city-specific ranges for the colour palettes</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(city_name) <span class="sc">%&gt;%</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">city_min =</span> <span class="fu">min</span>(min, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">city_max =</span> <span class="fu">max</span>(max, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette_max_abs =</span> <span class="fu">pmax</span>(<span class="fu">abs</span>(city_min), <span class="fu">abs</span>(city_max)),</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">city_breaks =</span> <span class="fu">map</span>(palette_max_abs,</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>      <span class="sc">~</span> <span class="fu">seq</span>(<span class="sc">-</span>.x, .x, <span class="at">length.out =</span> number_colours <span class="sc">+</span> <span class="dv">1</span>)),</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">walk2</span>(path, city_breaks, plot_raster_png)</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># export to csv (dropping paths)</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(filename, ref_lon, ref_lat, <span class="at">file_min =</span> min, <span class="at">file_max =</span> max,</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette_extent =</span> palette_max_abs, lon_min, lon_max, lat_min, lat_max, xmin,</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>    xmax, ymin, ymax) <span class="sc">%&gt;%</span></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"map-bounds-extent.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500976
+SpatRaster resampled to ncells = 500976
+SpatRaster resampled to ncells = 500976
+SpatRaster resampled to ncells = 500976</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 501320
+SpatRaster resampled to ncells = 501320
+SpatRaster resampled to ncells = 501320
+SpatRaster resampled to ncells = 501320</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500465
+SpatRaster resampled to ncells = 500465
+SpatRaster resampled to ncells = 500465
+SpatRaster resampled to ncells = 500465</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500588
+SpatRaster resampled to ncells = 500588
+SpatRaster resampled to ncells = 500588
+SpatRaster resampled to ncells = 500588</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500535
+SpatRaster resampled to ncells = 500535
+SpatRaster resampled to ncells = 500535
+SpatRaster resampled to ncells = 500535</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500308
+SpatRaster resampled to ncells = 500308
+SpatRaster resampled to ncells = 500308
+SpatRaster resampled to ncells = 500308</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 501034
+SpatRaster resampled to ncells = 501034
+SpatRaster resampled to ncells = 501034
+SpatRaster resampled to ncells = 501034</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500736
+SpatRaster resampled to ncells = 500736
+SpatRaster resampled to ncells = 500736
+SpatRaster resampled to ncells = 500736</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500520
+SpatRaster resampled to ncells = 500520
+SpatRaster resampled to ncells = 500520
+SpatRaster resampled to ncells = 500520</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500858
+SpatRaster resampled to ncells = 500858
+SpatRaster resampled to ncells = 500858
+SpatRaster resampled to ncells = 500858</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500797
+SpatRaster resampled to ncells = 500797
+SpatRaster resampled to ncells = 500797
+SpatRaster resampled to ncells = 500797</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 501095
+SpatRaster resampled to ncells = 501095
+SpatRaster resampled to ncells = 501095
+SpatRaster resampled to ncells = 501095</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500760
+SpatRaster resampled to ncells = 500760
+SpatRaster resampled to ncells = 500760
+SpatRaster resampled to ncells = 500760</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 501808
+SpatRaster resampled to ncells = 501808
+SpatRaster resampled to ncells = 501808
+SpatRaster resampled to ncells = 501808</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500832
+SpatRaster resampled to ncells = 500832
+SpatRaster resampled to ncells = 500832
+SpatRaster resampled to ncells = 500832</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 501147
+SpatRaster resampled to ncells = 501147
+SpatRaster resampled to ncells = 501147
+SpatRaster resampled to ncells = 501147</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500904
+SpatRaster resampled to ncells = 500904
+SpatRaster resampled to ncells = 500904
+SpatRaster resampled to ncells = 500904</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500400
+SpatRaster resampled to ncells = 500400
+SpatRaster resampled to ncells = 500400
+SpatRaster resampled to ncells = 500400</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500536
+SpatRaster resampled to ncells = 500536
+SpatRaster resampled to ncells = 500536
+SpatRaster resampled to ncells = 500536</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500488
+SpatRaster resampled to ncells = 500488
+SpatRaster resampled to ncells = 500488
+SpatRaster resampled to ncells = 500488</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 501160
+SpatRaster resampled to ncells = 501160
+SpatRaster resampled to ncells = 501160
+SpatRaster resampled to ncells = 501160</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500703
+SpatRaster resampled to ncells = 500703
+SpatRaster resampled to ncells = 500703
+SpatRaster resampled to ncells = 500703</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>SpatRaster resampled to ncells = 500816
+SpatRaster resampled to ncells = 500816
+SpatRaster resampled to ncells = 500816
+SpatRaster resampled to ncells = 500816</code></pre>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, function() {
+      let href = xref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children.length > 2) {
+          for (let i = 0; i < 2; i++) {
+            container.appendChild(note.children[i].cloneNode(true));
+          }
+          return container.innerHTML
+        } else {
+          return note.innerHTML;
+        }
+      } else {
+        return note.innerHTML;
+      }
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>index</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="_extensions/360-info/360-embed/embed.css">
+<link rel="stylesheet" href="_extensions/360-info/360-embed/modal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
+</head>
+
+<body>
+
+
+
+
+<div class="modalpanel">
+<div class="modalpanelitems">
+<!-- check https://icons.getbootstrap.com for icons! -->
+
+<a href="#" data-micromodal-trigger="modal-useremix" aria-label="Share dialog" role="button" tabindex="0">
+  <i class="bi bi-share-fill"></i>
+</a>
+
+<a href="#" data-micromodal-trigger="modal-about" aria-label="More information" role="button" tabindex="0">
+  <i class="bi bi-info-circle-fill"></i>
+</a>
+
+<a id="fullscreenButton" aria-label="Fullscreen" role="button" href="#" tabindex="0">
+  <span class="fsoff">
+    <i class="bi bi-arrows-fullscreen"></i>
+  </span>
+</a>
+
+<!-- full screen button script -->
+<script>
+  window.addEventListener("load", () => {
+    document.querySelector("#fullscreenButton").addEventListener("click", e => {
+      e.preventDefault();
+      console.log("FS button clicked!");
+
+      var fsBtn = document.querySelector("#fullscreenButton");
+
+      if (fsBtn.classList.contains("fsmode")) {
+        // fullscreen is on: disable it
+        document.exitFullscreen();
+        fsBtn.classList.remove("fsmode")
+      } else {
+        // fullscreen is off: enable it
+        var rootEl = document.documentElement;
+
+        var requestMethod =
+          rootEl.requestFullScreen ||
+          rootEl.webkitRequestFullScreen ||
+          rootEl.mozRequestFullScreen ||
+          rootEl.msRequestFullScreen;
+
+          if (requestMethod) {
+            requestMethod.call(rootEl);
+            fsBtn.classList.add("fsmode");
+          } else {
+            alert("Fullscreen mode isn't supported on this browser.")
+          }
+      }
+    });
+  })
+</script>
+</div>
+<!-- if there's room here, put credits on two lines:
+  * Editor names, 360info (hint: put &shy; in the middle of long names!)
+  * Data: ORG
+  (if there isn't room, put it in the ABOUT dialog) -->
+<p>James Goldie, 360info</p>
+<p>Data: Tay et al 2022</p>
+</div>
+<!-- finally, here's the EDITOR SHARE button. it's a quick way to copy the
+     embed code for editors and will only appear if ?edshare=true is in the
+     url (that way it'll appear on the newswire but not subsequent shares) -->
+<div id="edshare">
+  <i id="edshare-icon" class="bi bi-clipboard2-plus-fill"></i>
+  <div>
+    <h4 id="edshare-title" class="anchored">GET THIS MAP</h4>
+    <p id="edshare-description">Click to copy this into your story</p>
+  </div>
+</div>
+<!-- editor share banner: enable if ?edshare is in the url -->
+<script>
+  window.addEventListener("load", () => {
+    pageURL = new URL(window.location.href);
+    edshare = pageURL.searchParams.get("edshare");
+    
+    edshareBtn = document.querySelector("#edshare");
+    if (edshare === null) {
+      edshareBtn.style.display = "none";
+    } else {
+    
+      edshareBtn.classList.add("ready");
+    
+      edshareBtn.addEventListener("click", () => {
+
+        // figure out if we have a city to add to the link
+        cityChoice = pageURL.searchParams.get("city");
+  
+        cityChoiceParam = (cityChoice !== null) ? "&city=" + cityChoice : ""
+        
+
+        // copy the embed code to the clipboard
+        navigator.clipboard.writeText(
+          `<iframe allow="fullscreen" allowfullscreen="true" src="example.com` + cityChoiceParam + `" title="Interactive: future heat" style="width:100%; height:500px; border:none; background-color: white;" scrolling="no"></iframe>`);
+
+        // update button styles and content
+        edshareBtn.classList.remove("ready");
+        edshareBtn.classList.add("clicked");
+
+        edshareIcon = document.querySelector("#edshare-icon");
+        edshareIcon.removeAttribute("class");
+        edshareIcon.classList.add("bi");
+        edshareIcon.classList.add("bi-check");
+
+        edshareTitle = document.querySelector("#edshare-title");
+        edshareTitle.innerText = "COPIED!";
+
+        edshareDescription = document.querySelector("#edshare-description");
+        edshareDescription.innerHTML =
+          `Paste this interactive with the <i class="bi bi-code-square"></i> Embed button in your story editor.</br></br>
+          
+          Please remember to <strong>attribute 360info and our data sources.</strong>`
+
+        // button exit animation
+        setTimeout(() => {  edshareBtn.classList.add("done"); }, 5000);
+        setTimeout(() => {  edshareBtn.style.display = "none"; }, 7000);
+      });
+    }
+  });
+</script>
+<div id="libraries" class="cell">
+<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="29" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 28;"><span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> require<span class="op">.</span><span class="fu">alias</span>({</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="dt">maplibregl</span><span class="op">:</span> <span class="st">"maplibre-gl@2.4.0/dist/maplibre-gl.js"</span><span class="op">,</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="dt">h3</span><span class="op">:</span> {}<span class="op">,</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="dt">deck</span><span class="op">:</span> <span class="st">"deck.gl@8.9.4/dist.min.js"</span><span class="op">,</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="dt">lumaconstants</span><span class="op">:</span> <span class="st">"@luma.gl/constants@8.5.16/dist/dist.min.js"</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>maplibregl <span class="op">=</span> <span class="fu">r</span>(<span class="st">"maplibregl"</span>)<span class="op">.</span><span class="fu">catch</span>(() <span class="kw">=&gt;</span> <span class="bu">window</span>[<span class="st">"maplibregl"</span>])<span class="op">;</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">// absolutely convulted deck.gl + luma.gl constants loading based on</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">// https://observablehq.com/@observablehq/how-to-require-stubborn-modules#cell-68</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co">// (manually patching luma constants into deck's luma)</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>lib <span class="op">=</span> {</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> deck <span class="op">=</span> (<span class="bu">window</span><span class="op">.</span><span class="at">deck</span> <span class="op">=</span> <span class="cf">await</span> <span class="fu">r</span>(<span class="st">"deck"</span>))<span class="op">;</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> luma <span class="op">=</span> (<span class="bu">window</span><span class="op">.</span><span class="at">luma</span> <span class="op">=</span> <span class="cf">await</span> <span class="fu">r</span>(<span class="st">"deck"</span>))<span class="op">;</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> lumaconstants <span class="op">=</span> <span class="cf">await</span> <span class="fu">r</span>(<span class="st">"lumaconstants"</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  luma<span class="op">.</span><span class="at">GL</span> <span class="op">=</span> lumaconstants<span class="op">.</span><span class="at">GL</span><span class="op">;</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> {</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="dt">deck</span><span class="op">:</span> deck<span class="op">,</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    <span class="dt">luma</span><span class="op">:</span> luma</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div id="libraries-1">
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="libraries-2">
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="libraries-3">
+<div id="ojs-cell-1-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div id="zoom-to-city-bounds" class="cell">
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="59" data-source-offset="-44"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 58;"><span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>cityBounds <span class="op">=</span> <span class="fu">FileAttachment</span>(<span class="st">"/data/map-bounds-extent.csv"</span>)<span class="op">.</span><span class="fu">csv</span>({ <span class="dt">typed</span><span class="op">:</span> <span class="kw">true</span> })</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>cityBoundsExtracted <span class="op">=</span> cityBounds</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> ({<span class="op">...</span>d<span class="op">,</span> <span class="dt">city</span><span class="op">:</span> d<span class="op">.</span><span class="at">filename</span><span class="op">.</span><span class="fu">split</span>(<span class="st">"_"</span>)[<span class="dv">0</span>] }))</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="co">// get bounds of selected city</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="co">// (there'll be duplicates; just grab the first)</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a><span class="co">// mapbox and deckgl take bounds in different orders, ugh</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>filteredCityInfo <span class="op">=</span> cityBoundsExtracted<span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">city</span> <span class="op">==</span> selectedCity)</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>filteredCityBoundsMapbox <span class="op">=</span> [</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    [filteredCityInfo[<span class="dv">0</span>]<span class="op">.</span><span class="at">lon_min</span><span class="op">,</span> filteredCityInfo[<span class="dv">0</span>]<span class="op">.</span><span class="at">lat_min</span>]<span class="op">,</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    [filteredCityInfo[<span class="dv">0</span>]<span class="op">.</span><span class="at">lon_max</span><span class="op">,</span> filteredCityInfo[<span class="dv">0</span>]<span class="op">.</span><span class="at">lat_max</span>]</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>filteredCityBoundsDeckGL <span class="op">=</span> [</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>  filteredCityInfo[<span class="dv">0</span>]<span class="op">.</span><span class="at">lon_min</span><span class="op">,</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>  filteredCityInfo[<span class="dv">0</span>]<span class="op">.</span><span class="at">lat_min</span><span class="op">,</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>  filteredCityInfo[<span class="dv">0</span>]<span class="op">.</span><span class="at">lon_max</span><span class="op">,</span></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>  filteredCityInfo[<span class="dv">0</span>]<span class="op">.</span><span class="at">lat_max</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="co">// fly to the selected city whenever it changes (accounting for bottom bar)</span></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>map<span class="op">.</span><span class="fu">fitBounds</span>(filteredCityBoundsMapbox<span class="op">,</span> {</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>  <span class="dt">linear</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>  <span class="dt">offset</span><span class="op">:</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>]</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>  })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div id="zoom-to-city-bounds-1">
+<div id="ojs-cell-2-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="zoom-to-city-bounds-2">
+<div id="ojs-cell-2-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="zoom-to-city-bounds-3">
+<div id="ojs-cell-2-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="zoom-to-city-bounds-4">
+<div id="ojs-cell-2-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="zoom-to-city-bounds-5">
+<div id="ojs-cell-2-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="zoom-to-city-bounds-6">
+<div id="ojs-cell-2-6" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+<div id="custom-title-block" class="cell custom-title-block">
+<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="89" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 88;"><span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>max_city_sink <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">abs</span>(<span class="bu">Math</span><span class="op">.</span><span class="fu">min</span>(<span class="op">...</span>filteredCityInfo<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">file_min</span>)))</span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>map_title <span class="op">=</span> <span class="fu">md</span><span class="vs">`# Sinking cities: </span><span class="sc">${</span>selectedCity<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">([A-Z])</span><span class="ss">/g</span><span class="op">,</span> <span class="st">' $1'</span>)<span class="op">.</span><span class="fu">trim</span>()<span class="sc">}</span><span class="vs">`</span></span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>map_subtitle <span class="op">=</span> <span class="fu">md</span><span class="vs">`Measurements from researchers found that parts of the city are sinking by as much as **</span><span class="sc">${</span>max_city_sink <span class="op">*</span> <span class="dv">100</span><span class="sc">}</span><span class="vs"> cm per year.**`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="custom-title-block-1">
+<div id="ojs-cell-3-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="custom-title-block-2">
+<div id="ojs-cell-3-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="custom-title-block-3">
+<div id="ojs-cell-3-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div id="inputs" class="cell inputForm">
+<div class="sourceCode cell-code hidden" id="cb4" data-startfrom="100" data-source-offset="-94"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 99;"><span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>defaultCity <span class="op">=</span> {</span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> pageURL <span class="op">=</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">href</span>)<span class="op">;</span></span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> cityChoice <span class="op">=</span> pageURL<span class="op">.</span><span class="at">searchParams</span><span class="op">.</span><span class="fu">get</span>(<span class="st">"city"</span>)<span class="op">;</span></span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> allCities<span class="op">.</span><span class="fu">includes</span>(cityChoice) <span class="op">?</span> cityChoice <span class="op">:</span> <span class="st">"Jakarta"</span><span class="op">;</span></span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a><span class="co">// get list of all unique cities (with which to populate dropdown menu below)</span></span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>allCities <span class="op">=</span> [<span class="op">...</span><span class="kw">new</span> <span class="bu">Set</span>(cityBoundsExtracted<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">city</span>))]</span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>viewof selectedCity <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(allCities<span class="op">,</span> {</span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>  <span class="dt">label</span><span class="op">:</span> <span class="st">"City"</span><span class="op">,</span></span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>  <span class="dt">value</span><span class="op">:</span> defaultCity })<span class="op">;</span></span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>viewof certaintyBound <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">checkbox</span>([<span class="st">"Show less precise estimates"</span>])</span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a><span class="co">/* legend */</span></span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>refpointLegend <span class="op">=</span> <span class="fu">md</span><span class="vs">`✚ Reference point`</span></span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> <span class="dv">25</span></span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a>bins <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a>legend <span class="op">=</span></span>
+<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a>  <span class="fu">svg</span><span class="vs">`&lt;svg height="65px" width="</span><span class="sc">${</span>width <span class="op">*</span> bins<span class="sc">}</span><span class="vs">px"&gt;</span></span>
+<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;text fill="black" y=15 text-anchor="start" x=0&gt;Sinking&lt;/text&gt;</span></span>
+<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;text fill="black" y=15 text-anchor="end" x=</span><span class="sc">${</span>width <span class="op">*</span> bins<span class="sc">}</span><span class="vs">&gt;</span></span>
+<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a><span class="vs">      Rising</span></span>
+<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/text&gt;</span></span>
+<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a><span class="vs">    </span><span class="sc">${</span>d3<span class="op">.</span><span class="at">schemeRdYlBu</span>[bins]<span class="op">.</span><span class="fu">map</span>(</span>
+<span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a>      (colour<span class="op">,</span> i) <span class="kw">=&gt;</span> <span class="fu">svg</span><span class="vs">`&lt;rect height=15 y=23 width=</span><span class="sc">${</span>width<span class="sc">}</span></span>
+<span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a><span class="vs">        x=</span><span class="sc">${</span>width <span class="op">*</span> i<span class="sc">}</span><span class="vs"> fill="</span><span class="sc">${</span>colour<span class="sc">}</span><span class="vs">"&gt;&lt;/rect&gt;`</span></span>
+<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">}</span></span>
+<span id="cb4-132"><a href="#cb4-132" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;text fill="black" y=55 text-anchor="start" x=0&gt;-</span><span class="sc">${</span>filteredCityInfo[<span class="dv">0</span>]<span class="op">.</span><span class="at">palette_extent</span> <span class="op">*</span> <span class="dv">100</span><span class="sc">}</span><span class="vs"> cm/yr&lt;/text&gt;</span></span>
+<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;text fill="black" y=55 text-anchor="end" x=</span><span class="sc">${</span>width <span class="op">*</span> bins<span class="sc">}</span><span class="vs">&gt;</span></span>
+<span id="cb4-134"><a href="#cb4-134" aria-hidden="true" tabindex="-1"></a><span class="vs">      +</span><span class="sc">${</span>filteredCityInfo[<span class="dv">0</span>]<span class="op">.</span><span class="at">palette_extent</span> <span class="op">*</span> <span class="dv">100</span><span class="sc">}</span><span class="vs"> cm/yr</span></span>
+<span id="cb4-135"><a href="#cb4-135" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/text&gt;</span></span>
+<span id="cb4-136"><a href="#cb4-136" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/svg&gt;`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="inputs-1">
+<div id="ojs-cell-4-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="inputs-2">
+<div id="ojs-cell-4-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="inputs-3">
+<div id="ojs-cell-4-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="inputs-4">
+<div id="ojs-cell-4-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="inputs-5">
+<div id="ojs-cell-4-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="inputs-6">
+<div id="ojs-cell-4-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="inputs-7">
+<div id="ojs-cell-4-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="inputs-8">
+<div id="ojs-cell-4-8" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div id="raster-layer-def" class="cell">
+<div class="sourceCode cell-code hidden" id="cb5" data-startfrom="145" data-source-offset="-115"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 144;"><span id="cb5-145"><a href="#cb5-145" aria-hidden="true" tabindex="-1"></a>layer_0to25 <span class="op">=</span> <span class="kw">new</span> lib<span class="op">.</span><span class="at">deck</span><span class="op">.</span><span class="fu">MapboxLayer</span>({</span>
+<span id="cb5-146"><a href="#cb5-146" aria-hidden="true" tabindex="-1"></a>  <span class="dt">id</span><span class="op">:</span> <span class="st">"raster_0to25"</span><span class="op">,</span></span>
+<span id="cb5-147"><a href="#cb5-147" aria-hidden="true" tabindex="-1"></a>  <span class="dt">type</span><span class="op">:</span> lib<span class="op">.</span><span class="at">deck</span><span class="op">.</span><span class="at">BitmapLayer</span><span class="op">,</span></span>
+<span id="cb5-148"><a href="#cb5-148" aria-hidden="true" tabindex="-1"></a>  <span class="dt">image</span><span class="op">:</span> []<span class="op">,</span></span>
+<span id="cb5-149"><a href="#cb5-149" aria-hidden="true" tabindex="-1"></a>  <span class="dt">textureParameters</span><span class="op">:</span> {</span>
+<span id="cb5-150"><a href="#cb5-150" aria-hidden="true" tabindex="-1"></a>    [lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">TEXTURE_MIN_FILTER</span>]<span class="op">:</span> lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">NEAREST</span><span class="op">,</span></span>
+<span id="cb5-151"><a href="#cb5-151" aria-hidden="true" tabindex="-1"></a>    [lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">TEXTURE_MAG_FILTER</span>]<span class="op">:</span> lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">NEAREST</span></span>
+<span id="cb5-152"><a href="#cb5-152" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-153"><a href="#cb5-153" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb5-154"><a href="#cb5-154" aria-hidden="true" tabindex="-1"></a>layer_25to50 <span class="op">=</span> <span class="kw">new</span> lib<span class="op">.</span><span class="at">deck</span><span class="op">.</span><span class="fu">MapboxLayer</span>({</span>
+<span id="cb5-155"><a href="#cb5-155" aria-hidden="true" tabindex="-1"></a>  <span class="dt">id</span><span class="op">:</span> <span class="st">"raster_25to50"</span><span class="op">,</span></span>
+<span id="cb5-156"><a href="#cb5-156" aria-hidden="true" tabindex="-1"></a>  <span class="dt">type</span><span class="op">:</span> lib<span class="op">.</span><span class="at">deck</span><span class="op">.</span><span class="at">BitmapLayer</span><span class="op">,</span></span>
+<span id="cb5-157"><a href="#cb5-157" aria-hidden="true" tabindex="-1"></a>  <span class="dt">image</span><span class="op">:</span> []<span class="op">,</span></span>
+<span id="cb5-158"><a href="#cb5-158" aria-hidden="true" tabindex="-1"></a>  <span class="dt">textureParameters</span><span class="op">:</span> {</span>
+<span id="cb5-159"><a href="#cb5-159" aria-hidden="true" tabindex="-1"></a>    [lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">TEXTURE_MIN_FILTER</span>]<span class="op">:</span> lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">NEAREST</span><span class="op">,</span></span>
+<span id="cb5-160"><a href="#cb5-160" aria-hidden="true" tabindex="-1"></a>    [lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">TEXTURE_MAG_FILTER</span>]<span class="op">:</span> lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">NEAREST</span></span>
+<span id="cb5-161"><a href="#cb5-161" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-162"><a href="#cb5-162" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb5-163"><a href="#cb5-163" aria-hidden="true" tabindex="-1"></a>layer_50to100 <span class="op">=</span> <span class="kw">new</span> lib<span class="op">.</span><span class="at">deck</span><span class="op">.</span><span class="fu">MapboxLayer</span>({</span>
+<span id="cb5-164"><a href="#cb5-164" aria-hidden="true" tabindex="-1"></a>  <span class="dt">id</span><span class="op">:</span> <span class="st">"raster_50to100"</span><span class="op">,</span></span>
+<span id="cb5-165"><a href="#cb5-165" aria-hidden="true" tabindex="-1"></a>  <span class="dt">type</span><span class="op">:</span> lib<span class="op">.</span><span class="at">deck</span><span class="op">.</span><span class="at">BitmapLayer</span><span class="op">,</span></span>
+<span id="cb5-166"><a href="#cb5-166" aria-hidden="true" tabindex="-1"></a>  <span class="dt">image</span><span class="op">:</span> []<span class="op">,</span></span>
+<span id="cb5-167"><a href="#cb5-167" aria-hidden="true" tabindex="-1"></a>  <span class="dt">textureParameters</span><span class="op">:</span> {</span>
+<span id="cb5-168"><a href="#cb5-168" aria-hidden="true" tabindex="-1"></a>    [lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">TEXTURE_MIN_FILTER</span>]<span class="op">:</span> lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">NEAREST</span><span class="op">,</span></span>
+<span id="cb5-169"><a href="#cb5-169" aria-hidden="true" tabindex="-1"></a>    [lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">TEXTURE_MAG_FILTER</span>]<span class="op">:</span> lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">NEAREST</span></span>
+<span id="cb5-170"><a href="#cb5-170" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-171"><a href="#cb5-171" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb5-172"><a href="#cb5-172" aria-hidden="true" tabindex="-1"></a>layer_gt100 <span class="op">=</span> <span class="kw">new</span> lib<span class="op">.</span><span class="at">deck</span><span class="op">.</span><span class="fu">MapboxLayer</span>({</span>
+<span id="cb5-173"><a href="#cb5-173" aria-hidden="true" tabindex="-1"></a>  <span class="dt">id</span><span class="op">:</span> <span class="st">"raster_gt100"</span><span class="op">,</span></span>
+<span id="cb5-174"><a href="#cb5-174" aria-hidden="true" tabindex="-1"></a>  <span class="dt">type</span><span class="op">:</span> lib<span class="op">.</span><span class="at">deck</span><span class="op">.</span><span class="at">BitmapLayer</span><span class="op">,</span></span>
+<span id="cb5-175"><a href="#cb5-175" aria-hidden="true" tabindex="-1"></a>  <span class="dt">image</span><span class="op">:</span> []<span class="op">,</span></span>
+<span id="cb5-176"><a href="#cb5-176" aria-hidden="true" tabindex="-1"></a>  <span class="dt">textureParameters</span><span class="op">:</span> {</span>
+<span id="cb5-177"><a href="#cb5-177" aria-hidden="true" tabindex="-1"></a>    [lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">TEXTURE_MIN_FILTER</span>]<span class="op">:</span> lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">NEAREST</span><span class="op">,</span></span>
+<span id="cb5-178"><a href="#cb5-178" aria-hidden="true" tabindex="-1"></a>    [lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">TEXTURE_MAG_FILTER</span>]<span class="op">:</span> lib<span class="op">.</span><span class="at">luma</span><span class="op">.</span><span class="at">GL</span><span class="op">.</span><span class="at">NEAREST</span></span>
+<span id="cb5-179"><a href="#cb5-179" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-180"><a href="#cb5-180" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb5-181"><a href="#cb5-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-182"><a href="#cb5-182" aria-hidden="true" tabindex="-1"></a><span class="co">// add a layer for the reference points too</span></span>
+<span id="cb5-183"><a href="#cb5-183" aria-hidden="true" tabindex="-1"></a>layer_refpoints <span class="op">=</span> <span class="kw">new</span> lib<span class="op">.</span><span class="at">deck</span><span class="op">.</span><span class="fu">MapboxLayer</span>({</span>
+<span id="cb5-184"><a href="#cb5-184" aria-hidden="true" tabindex="-1"></a>  <span class="dt">id</span><span class="op">:</span> <span class="st">"refpoints"</span><span class="op">,</span></span>
+<span id="cb5-185"><a href="#cb5-185" aria-hidden="true" tabindex="-1"></a>  <span class="dt">type</span><span class="op">:</span> lib<span class="op">.</span><span class="at">deck</span><span class="op">.</span><span class="at">IconLayer</span><span class="op">,</span></span>
+<span id="cb5-186"><a href="#cb5-186" aria-hidden="true" tabindex="-1"></a>  <span class="dt">data</span><span class="op">:</span> cityBoundsExtracted<span class="op">,</span></span>
+<span id="cb5-187"><a href="#cb5-187" aria-hidden="true" tabindex="-1"></a>  <span class="dt">getPosition</span><span class="op">:</span> d <span class="kw">=&gt;</span> [d<span class="op">.</span><span class="at">ref_lon</span><span class="op">,</span> d<span class="op">.</span><span class="at">ref_lat</span>]<span class="op">,</span></span>
+<span id="cb5-188"><a href="#cb5-188" aria-hidden="true" tabindex="-1"></a>  <span class="dt">getColor</span><span class="op">:</span> d <span class="kw">=&gt;</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">256</span><span class="op">,</span> <span class="dv">128</span>]<span class="op">,</span></span>
+<span id="cb5-189"><a href="#cb5-189" aria-hidden="true" tabindex="-1"></a>  <span class="dt">sizeScale</span><span class="op">:</span> <span class="dv">50</span><span class="op">,</span></span>
+<span id="cb5-190"><a href="#cb5-190" aria-hidden="true" tabindex="-1"></a>  <span class="dt">sizeUnits</span><span class="op">:</span> <span class="st">"pixels"</span><span class="op">,</span></span>
+<span id="cb5-191"><a href="#cb5-191" aria-hidden="true" tabindex="-1"></a>  <span class="dt">getIcon</span><span class="op">:</span> d <span class="kw">=&gt;</span> ({</span>
+<span id="cb5-192"><a href="#cb5-192" aria-hidden="true" tabindex="-1"></a>    <span class="dt">url</span><span class="op">:</span> <span class="st">"cross.png"</span><span class="op">,</span></span>
+<span id="cb5-193"><a href="#cb5-193" aria-hidden="true" tabindex="-1"></a>    <span class="dt">width</span><span class="op">:</span> <span class="dv">48</span><span class="op">,</span></span>
+<span id="cb5-194"><a href="#cb5-194" aria-hidden="true" tabindex="-1"></a>    <span class="dt">height</span><span class="op">:</span> <span class="dv">48</span><span class="op">,</span></span>
+<span id="cb5-195"><a href="#cb5-195" aria-hidden="true" tabindex="-1"></a>    <span class="dt">anchorX</span><span class="op">:</span> <span class="dv">24</span><span class="op">,</span></span>
+<span id="cb5-196"><a href="#cb5-196" aria-hidden="true" tabindex="-1"></a>    <span class="dt">anchorY</span><span class="op">:</span> <span class="dv">24</span></span>
+<span id="cb5-197"><a href="#cb5-197" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb5-198"><a href="#cb5-198" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div id="raster-layer-def-1">
+<div id="ojs-cell-5-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="raster-layer-def-2">
+<div id="ojs-cell-5-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="raster-layer-def-3">
+<div id="ojs-cell-5-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="raster-layer-def-4">
+<div id="ojs-cell-5-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="raster-layer-def-5">
+<div id="ojs-cell-5-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div id="raster-layer-update" class="cell">
+<div class="sourceCode cell-code hidden" id="cb6" data-startfrom="206" data-source-offset="-1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 205;"><span id="cb6-206"><a href="#cb6-206" aria-hidden="true" tabindex="-1"></a>path_0to25 <span class="op">=</span> <span class="st">"/data/3-pngs/"</span> <span class="op">+</span> selectedCity <span class="op">+</span> <span class="st">"_0to25pp.png"</span></span>
+<span id="cb6-207"><a href="#cb6-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-208"><a href="#cb6-208" aria-hidden="true" tabindex="-1"></a><span class="co">// conditionally display city's less precise pngs if certainty is checked</span></span>
+<span id="cb6-209"><a href="#cb6-209" aria-hidden="true" tabindex="-1"></a>path_25to50 <span class="op">=</span> certaintyBound<span class="op">.</span><span class="fu">includes</span>(<span class="st">"Show less precise estimates"</span>) <span class="op">?</span></span>
+<span id="cb6-210"><a href="#cb6-210" aria-hidden="true" tabindex="-1"></a>    <span class="st">"/data/3-pngs/"</span> <span class="op">+</span> selectedCity <span class="op">+</span> <span class="st">"_25to50pp.png"</span> <span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb6-211"><a href="#cb6-211" aria-hidden="true" tabindex="-1"></a>path_50to100 <span class="op">=</span> certaintyBound<span class="op">.</span><span class="fu">includes</span>(<span class="st">"Show less precise estimates"</span>) <span class="op">?</span></span>
+<span id="cb6-212"><a href="#cb6-212" aria-hidden="true" tabindex="-1"></a>    <span class="st">"/data/3-pngs/"</span> <span class="op">+</span> selectedCity <span class="op">+</span> <span class="st">"_50to100pp.png"</span> <span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb6-213"><a href="#cb6-213" aria-hidden="true" tabindex="-1"></a>path_gt100 <span class="op">=</span> certaintyBound<span class="op">.</span><span class="fu">includes</span>(<span class="st">"Show less precise estimates"</span>) <span class="op">?</span></span>
+<span id="cb6-214"><a href="#cb6-214" aria-hidden="true" tabindex="-1"></a>    <span class="st">"/data/3-pngs/"</span> <span class="op">+</span> selectedCity <span class="op">+</span> <span class="st">"_gt100pp.png"</span> <span class="op">:</span> <span class="kw">null</span></span>
+<span id="cb6-215"><a href="#cb6-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-216"><a href="#cb6-216" aria-hidden="true" tabindex="-1"></a><span class="co">// update the layers with the selected city's file paths and bounds</span></span>
+<span id="cb6-217"><a href="#cb6-217" aria-hidden="true" tabindex="-1"></a>layer_0to25<span class="op">.</span><span class="fu">setProps</span>({ <span class="dt">image</span><span class="op">:</span> path_0to25<span class="op">,</span> <span class="dt">bounds</span><span class="op">:</span> filteredCityBoundsDeckGL })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div id="raster-layer-update-1">
+<div id="ojs-cell-6-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="raster-layer-update-2">
+<div id="ojs-cell-6-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="raster-layer-update-3">
+<div id="ojs-cell-6-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="raster-layer-update-4">
+<div id="ojs-cell-6-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div id="raster-layer-update-5">
+<div id="ojs-cell-6-5" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb7" data-startfrom="218" data-source-offset="-677"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 217;"><span id="cb7-218"><a href="#cb7-218" aria-hidden="true" tabindex="-1"></a>layer_25to50<span class="op">.</span><span class="fu">setProps</span>({ <span class="dt">image</span><span class="op">:</span> path_25to50<span class="op">,</span> <span class="dt">bounds</span><span class="op">:</span> filteredCityBoundsDeckGL })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div id="raster-layer-update-6">
+<div id="ojs-cell-6-6" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb8" data-startfrom="219" data-source-offset="-757"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 218;"><span id="cb8-219"><a href="#cb8-219" aria-hidden="true" tabindex="-1"></a>layer_50to100<span class="op">.</span><span class="fu">setProps</span>({ <span class="dt">image</span><span class="op">:</span> path_50to100<span class="op">,</span> <span class="dt">bounds</span><span class="op">:</span> filteredCityBoundsDeckGL })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div id="raster-layer-update-7">
+<div id="ojs-cell-6-7" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb9" data-startfrom="220" data-source-offset="-839"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 219;"><span id="cb9-220"><a href="#cb9-220" aria-hidden="true" tabindex="-1"></a>layer_gt100<span class="op">.</span><span class="fu">setProps</span>({ <span class="dt">image</span><span class="op">:</span> path_gt100<span class="op">,</span> <span class="dt">bounds</span><span class="op">:</span> filteredCityBoundsDeckGL })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div id="raster-layer-update-8">
+<div id="ojs-cell-6-8" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb10" data-startfrom="224" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 223;"><span id="cb10-224"><a href="#cb10-224" aria-hidden="true" tabindex="-1"></a>viewof map <span class="op">=</span> {</span>
+<span id="cb10-225"><a href="#cb10-225" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> container <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;div style="position: absolute; left: 0; top: 0; height: 100vh; width: 100%;" /&gt;`</span><span class="op">;</span></span>
+<span id="cb10-226"><a href="#cb10-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-227"><a href="#cb10-227" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Give the container dimensions.</span></span>
+<span id="cb10-228"><a href="#cb10-228" aria-hidden="true" tabindex="-1"></a>  <span class="kw">yield</span> container<span class="op">;</span></span>
+<span id="cb10-229"><a href="#cb10-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-230"><a href="#cb10-230" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Create the \`map\` object with the mapboxgl.Map constructor, referencing</span></span>
+<span id="cb10-231"><a href="#cb10-231" aria-hidden="true" tabindex="-1"></a>  <span class="co">// the container div</span></span>
+<span id="cb10-232"><a href="#cb10-232" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> map <span class="op">=</span> <span class="kw">new</span> maplibregl<span class="op">.</span><span class="fu">Map</span>({</span>
+<span id="cb10-233"><a href="#cb10-233" aria-hidden="true" tabindex="-1"></a>    container<span class="op">,</span></span>
+<span id="cb10-234"><a href="#cb10-234" aria-hidden="true" tabindex="-1"></a>    <span class="dt">zoom</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb10-235"><a href="#cb10-235" aria-hidden="true" tabindex="-1"></a>    <span class="dt">center</span><span class="op">:</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>]<span class="op">,</span></span>
+<span id="cb10-236"><a href="#cb10-236" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-237"><a href="#cb10-237" aria-hidden="true" tabindex="-1"></a>    <span class="co">// pitch: 30,</span></span>
+<span id="cb10-238"><a href="#cb10-238" aria-hidden="true" tabindex="-1"></a>    <span class="dt">antialias</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb10-239"><a href="#cb10-239" aria-hidden="true" tabindex="-1"></a>    <span class="dt">style</span><span class="op">:</span> <span class="st">"style.json"</span><span class="op">,</span></span>
+<span id="cb10-240"><a href="#cb10-240" aria-hidden="true" tabindex="-1"></a>    <span class="dt">attributionControl</span><span class="op">:</span> <span class="kw">false</span></span>
+<span id="cb10-241"><a href="#cb10-241" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb10-242"><a href="#cb10-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-243"><a href="#cb10-243" aria-hidden="true" tabindex="-1"></a>  <span class="co">// on map load:</span></span>
+<span id="cb10-244"><a href="#cb10-244" aria-hidden="true" tabindex="-1"></a>  <span class="co">// - dispatch its value back to ojs</span></span>
+<span id="cb10-245"><a href="#cb10-245" aria-hidden="true" tabindex="-1"></a>  <span class="co">// - add the deck.gl layers to the map</span></span>
+<span id="cb10-246"><a href="#cb10-246" aria-hidden="true" tabindex="-1"></a>  map<span class="op">.</span><span class="fu">on</span>(<span class="st">"load"</span><span class="op">,</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb10-247"><a href="#cb10-247" aria-hidden="true" tabindex="-1"></a>    container<span class="op">.</span><span class="at">value</span> <span class="op">=</span> map<span class="op">;</span></span>
+<span id="cb10-248"><a href="#cb10-248" aria-hidden="true" tabindex="-1"></a>    container<span class="op">.</span><span class="fu">dispatchEvent</span>(<span class="kw">new</span> <span class="bu">CustomEvent</span>(<span class="st">"input"</span>))<span class="op">;</span></span>
+<span id="cb10-249"><a href="#cb10-249" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-250"><a href="#cb10-250" aria-hidden="true" tabindex="-1"></a>    map<span class="op">.</span><span class="fu">addLayer</span>(layer_0to25)<span class="op">;</span></span>
+<span id="cb10-251"><a href="#cb10-251" aria-hidden="true" tabindex="-1"></a>    map<span class="op">.</span><span class="fu">addLayer</span>(layer_25to50)<span class="op">;</span></span>
+<span id="cb10-252"><a href="#cb10-252" aria-hidden="true" tabindex="-1"></a>    map<span class="op">.</span><span class="fu">addLayer</span>(layer_50to100)<span class="op">;</span></span>
+<span id="cb10-253"><a href="#cb10-253" aria-hidden="true" tabindex="-1"></a>    map<span class="op">.</span><span class="fu">addLayer</span>(layer_gt100)<span class="op">;</span></span>
+<span id="cb10-254"><a href="#cb10-254" aria-hidden="true" tabindex="-1"></a>    map<span class="op">.</span><span class="fu">addLayer</span>(layer_refpoints)</span>
+<span id="cb10-255"><a href="#cb10-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-256"><a href="#cb10-256" aria-hidden="true" tabindex="-1"></a>    <span class="co">// </span><span class="al">TODO</span><span class="co"> - opacity not working</span></span>
+<span id="cb10-257"><a href="#cb10-257" aria-hidden="true" tabindex="-1"></a>    <span class="co">// map.setPaintProperty("raster_25to50", "raster-opacity", 0.75)</span></span>
+<span id="cb10-258"><a href="#cb10-258" aria-hidden="true" tabindex="-1"></a>    <span class="co">// map.setPaintProperty("raster_50to100", "raster-opacity", 0.5)</span></span>
+<span id="cb10-259"><a href="#cb10-259" aria-hidden="true" tabindex="-1"></a>    <span class="co">// map.setPaintProperty("raster_gt100", "raster-opacity", 0.25)</span></span>
+<span id="cb10-260"><a href="#cb10-260" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-261"><a href="#cb10-261" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb10-262"><a href="#cb10-262" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="map" class="cell-output cell-output-display">
+<div id="ojs-cell-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<!-- initialise miromodal.js -->
+<div class="cell" data-include="false">
+<div class="sourceCode cell-code hidden" id="cb11" data-startfrom="1" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>micro <span class="op">=</span> <span class="pp">require</span>(<span class="st">"micromodal@0.4.10"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>micro<span class="op">.</span><span class="fu">init</span>({</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">awaitOpenAnimation</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">awaitCloseAnimation</span><span class="op">:</span> <span class="kw">true</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-8-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display hidden">
+<div>
+<div id="ojs-cell-8-2" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+<div id="modal-useremix" class="modal micromodal-slide" aria-hidden="true">
+<div class="modal__overlay" tabindex="-1" data-micromodal-close="true">
+<div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-useremix-title">
+<button class="modal__close" aria-label="Close modal" data-micromodal-close="">
+</button>
+<div id="modal-useremix-content">
+<h2 id="use-remix" class="anchored">Use + Remix</h2>
+<p>These charts, as well as the analyses that underpin them, are available under a <a href="https://creativecommons.org/licenses/by/4.0"><strong>Creative Commons Attribution 4.0 licence</strong></a>.</p>
+<p>Please acknowledge <a href="https://360info.org">360info</a> and our data sources when you use these charts and data.</p>
+<h4 id="embed-this-chart-in-your-article" class="anchored">Embed this chart in your article</h4>
+<p>Copy and paste the following code:</p>
+<div class="embedcode">
+<pre><code>&lt;iframe allow="fullscreen" allowfullscreen="true" src="example.com" title="Interactive: future heat" style="width:100%; height:500px; border:none; background-color: white;" scrolling="no"&gt;&lt;/iframe&gt;</code></pre>
+</div>
+<p>This content is subject to <a href="https://newshub.360info.org/page/terms">360info’s Terms of Use</a>.</p>
+<h4 id="get-the-data-and-code" class="anchored">Get the data and code</h4>
+<p>Visit the <a href="https://github.com/360-info/report-template/tree/main/data">GitHub repository</a> to:</p>
+<ul>
+<li><a href="https://github.com/360-info/report-template/tree/main/data"><strong>Download the data</strong></a></li>
+<li><a href="https://github.com/360-info/report-template"><strong>Recreate or remix the chart</strong></a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- notes dialog -->
+<div id="modal-about" class="modal micromodal-slide" aria-hidden="true">
+<div class="modal__overlay" tabindex="-1" data-micromodal-close="true">
+<div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-about-title">
+<button class="modal__close" aria-label="Close modal" data-micromodal-close="">
+</button>
+<header>
+<h2 id="modal-about-title" class="anchored">About</h2>
+</header>
+<div id="modal-about-content">
+<p>As many cities develop, they often respond to growing water demand with groundwater extraction. This leads to the phenomenon of <strong>land subsistence</strong>: as the water is pumped to the surface, the land beneath settles lower. Oil and gas drilling and manic construction are also culprits.</p>
+<p>Data from <a href="https://doi.org/10.1038/s41893-022-00947-z">Tay et al 2022</a> shows that many of the most populous coastal cities, shown on this map, are suffering from subsistence on a scale of centimetres every year.</p>
+<p>Not all cities are sinking at the same rate, and not all <em>parts</em> of a city sink equally. Areas shown in red are where a city’s most intense subsistence is taking place.</p>
+<p>Global sea rise is not shown on this map - it is occurring on top of the land subsistence you see here. Cities will have to contend with both in order to protect their residents.</p>
+<h3 id="methodology" class="anchored">Methodology</h3>
+<p>The authors of this study used a type of radar called <strong>interferometric synthetic aperture radar</strong>, or InSAR. Some parts of the city that were not directly measured by InSAR were interpolated, or filled in statistically.</p>
+<p>Some parts of the data are less precisely estimated than others. Use the checkbox in the lower left to screen out areas with less precise measurements (more than 25% normalised standard deviation).</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<script type="ojs-module-contents">
+{"contents":[{"methodName":"interpret","cellName":"ojs-cell-1","inline":false,"source":"\nr = require.alias({\n  maplibregl: \"maplibre-gl@2.4.0/dist/maplibre-gl.js\",\n  h3: {},\n  deck: \"deck.gl@8.9.4/dist.min.js\",\n  lumaconstants: \"@luma.gl/constants@8.5.16/dist/dist.min.js\"\n});\n\nmaplibregl = r(\"maplibregl\").catch(() => window[\"maplibregl\"]);\n\n// absolutely convulted deck.gl + luma.gl constants loading based on\n// https://observablehq.com/@observablehq/how-to-require-stubborn-modules#cell-68\n// (manually patching luma constants into deck's luma)\nlib = {\n  const deck = (window.deck = await r(\"deck\"));\n  const luma = (window.luma = await r(\"deck\"));\n  const lumaconstants = await r(\"lumaconstants\")\n  luma.GL = lumaconstants.GL;\n  return {\n    deck: deck,\n    luma: luma\n  }\n}\n\n"},{"methodName":"interpret","cellName":"ojs-cell-2","inline":false,"source":"\n// load bounds data and extract city names\ncityBounds = FileAttachment(\"/data/map-bounds-extent.csv\").csv({ typed: true })\ncityBoundsExtracted = cityBounds\n  .map(d => ({...d, city: d.filename.split(\"_\")[0] }))\n\n// get bounds of selected city\n// (there'll be duplicates; just grab the first)\n// mapbox and deckgl take bounds in different orders, ugh\nfilteredCityInfo = cityBoundsExtracted.filter(d => d.city == selectedCity)\nfilteredCityBoundsMapbox = [\n    [filteredCityInfo[0].lon_min, filteredCityInfo[0].lat_min],\n    [filteredCityInfo[0].lon_max, filteredCityInfo[0].lat_max]\n  ]\nfilteredCityBoundsDeckGL = [\n  filteredCityInfo[0].lon_min,\n  filteredCityInfo[0].lat_min,\n  filteredCityInfo[0].lon_max,\n  filteredCityInfo[0].lat_max\n]\n\n// fly to the selected city whenever it changes (accounting for bottom bar)\nmap.fitBounds(filteredCityBoundsMapbox, {\n  linear: false,\n  offset: [0, 0]\n  })\n"},{"methodName":"interpret","cellName":"ojs-cell-3","inline":false,"source":"\nmax_city_sink = Math.abs(Math.min(...filteredCityInfo.map(d => d.file_min)))\nmap_title = md`# Sinking cities: ${selectedCity.replace(/([A-Z])/g, ' $1').trim()}`\nmap_subtitle = md`Measurements from researchers found that parts of the city are sinking by as much as **${max_city_sink * 100} cm per year.**` \n"},{"methodName":"interpret","cellName":"ojs-cell-4","inline":false,"source":"\n// has someone provided a default city via a URL parameter? test it against\n// the city list\ndefaultCity = {\n  const pageURL = new URL(window.location.href);\n  const cityChoice = pageURL.searchParams.get(\"city\");\n  \n  return allCities.includes(cityChoice) ? cityChoice : \"Jakarta\";\n}\n\n// get list of all unique cities (with which to populate dropdown menu below)\nallCities = [...new Set(cityBoundsExtracted.map(d => d.city))]\n\nviewof selectedCity = Inputs.select(allCities, {\n  label: \"City\",\n  value: defaultCity });\n\nviewof certaintyBound = Inputs.checkbox([\"Show less precise estimates\"])\n\n/* legend */\n\nrefpointLegend = md`✚ Reference point`\n\nwidth = 25\nbins = 10\nlegend =\n  svg`<svg height=\"65px\" width=\"${width * bins}px\">\n    <text fill=\"black\" y=15 text-anchor=\"start\" x=0>Sinking</text>\n    <text fill=\"black\" y=15 text-anchor=\"end\" x=${width * bins}>\n      Rising\n    </text>\n    ${d3.schemeRdYlBu[bins].map(\n      (colour, i) => svg`<rect height=15 y=23 width=${width}\n        x=${width * i} fill=\"${colour}\"></rect>`\n    )}\n    <text fill=\"black\" y=55 text-anchor=\"start\" x=0>-${filteredCityInfo[0].palette_extent * 100} cm/yr</text>\n    <text fill=\"black\" y=55 text-anchor=\"end\" x=${width * bins}>\n      +${filteredCityInfo[0].palette_extent * 100} cm/yr\n    </text>\n  </svg>`\n"},{"methodName":"interpret","cellName":"ojs-cell-5","inline":false,"source":"\n// define layers but don't add images yet\n// (also disable the default interpolation, so we can stack the layers)\nlayer_0to25 = new lib.deck.MapboxLayer({\n  id: \"raster_0to25\",\n  type: lib.deck.BitmapLayer,\n  image: [],\n  textureParameters: {\n    [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,\n    [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST\n  }\n});\nlayer_25to50 = new lib.deck.MapboxLayer({\n  id: \"raster_25to50\",\n  type: lib.deck.BitmapLayer,\n  image: [],\n  textureParameters: {\n    [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,\n    [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST\n  }\n});\nlayer_50to100 = new lib.deck.MapboxLayer({\n  id: \"raster_50to100\",\n  type: lib.deck.BitmapLayer,\n  image: [],\n  textureParameters: {\n    [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,\n    [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST\n  }\n});\nlayer_gt100 = new lib.deck.MapboxLayer({\n  id: \"raster_gt100\",\n  type: lib.deck.BitmapLayer,\n  image: [],\n  textureParameters: {\n    [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,\n    [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST\n  }\n});\n\n// add a layer for the reference points too\nlayer_refpoints = new lib.deck.MapboxLayer({\n  id: \"refpoints\",\n  type: lib.deck.IconLayer,\n  data: cityBoundsExtracted,\n  getPosition: d => [d.ref_lon, d.ref_lat],\n  getColor: d => [0, 256, 128],\n  sizeScale: 50,\n  sizeUnits: \"pixels\",\n  getIcon: d => ({\n    url: \"cross.png\",\n    width: 48,\n    height: 48,\n    anchorX: 24,\n    anchorY: 24\n  })\n})\n\n"},{"methodName":"interpret","cellName":"ojs-cell-6","inline":false,"source":"\npath_0to25 = \"/data/3-pngs/\" + selectedCity + \"_0to25pp.png\"\n\n// conditionally display city's less precise pngs if certainty is checked\npath_25to50 = certaintyBound.includes(\"Show less precise estimates\") ?\n    \"/data/3-pngs/\" + selectedCity + \"_25to50pp.png\" : null\npath_50to100 = certaintyBound.includes(\"Show less precise estimates\") ?\n    \"/data/3-pngs/\" + selectedCity + \"_50to100pp.png\" : null\npath_gt100 = certaintyBound.includes(\"Show less precise estimates\") ?\n    \"/data/3-pngs/\" + selectedCity + \"_gt100pp.png\" : null\n\n// update the layers with the selected city's file paths and bounds\nlayer_0to25.setProps({ image: path_0to25, bounds: filteredCityBoundsDeckGL })\nlayer_25to50.setProps({ image: path_25to50, bounds: filteredCityBoundsDeckGL })\nlayer_50to100.setProps({ image: path_50to100, bounds: filteredCityBoundsDeckGL })\nlayer_gt100.setProps({ image: path_gt100, bounds: filteredCityBoundsDeckGL })\n"},{"methodName":"interpret","cellName":"ojs-cell-7","inline":false,"source":"\nviewof map = {\n  let container = html`<div style=\"position: absolute; left: 0; top: 0; height: 100vh; width: 100%;\" />`;\n\n  // Give the container dimensions.\n  yield container;\n\n  // Create the \\`map\\` object with the mapboxgl.Map constructor, referencing\n  // the container div\n  let map = new maplibregl.Map({\n    container,\n    zoom: 1,\n    center: [0, 0],\n    \n    // pitch: 30,\n    antialias: true,\n    style: \"style.json\",\n    attributionControl: false\n  });\n\n  // on map load:\n  // - dispatch its value back to ojs\n  // - add the deck.gl layers to the map\n  map.on(\"load\", () => {\n    container.value = map;\n    container.dispatchEvent(new CustomEvent(\"input\"));\n    \n    map.addLayer(layer_0to25);\n    map.addLayer(layer_25to50);\n    map.addLayer(layer_50to100);\n    map.addLayer(layer_gt100);\n    map.addLayer(layer_refpoints)\n\n    // TODO - opacity not working\n    // map.setPaintProperty(\"raster_25to50\", \"raster-opacity\", 0.75)\n    // map.setPaintProperty(\"raster_50to100\", \"raster-opacity\", 0.5)\n    // map.setPaintProperty(\"raster_gt100\", \"raster-opacity\", 0.25)\n    \n  });\n}\n"},{"methodName":"interpret","cellName":"ojs-cell-8","inline":false,"source":"micro = require(\"micromodal@0.4.10\")\nmicro.init({\n  awaitOpenAnimation: true,\n  awaitCloseAnimation: true\n});\n"},{"methodName":"interpretQuiet","source":"shinyInput('selectedCity')"},{"methodName":"interpretQuiet","source":"shinyInput('certaintyBound')"},{"methodName":"interpretQuiet","source":"shinyInput('map')"}]}
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../map";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+  tabsets.forEach(function(tabset) {
+    const tabby = new Tabby('#' + tabset.id);
+  });
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'light-border',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, function() {
+      let href = xref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children.length > 2) {
+          for (let i = 0; i < 2; i++) {
+            container.appendChild(note.children[i].cloneNode(true));
+          }
+          return container.innerHTML
+        } else {
+          return note.innerHTML;
+        }
+      } else {
+        return note.innerHTML;
+      }
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+
+
+
+</body></html>
