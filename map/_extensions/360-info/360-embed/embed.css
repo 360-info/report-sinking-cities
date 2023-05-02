@@ -13,21 +13,29 @@ a:visited {
   color: #1481c9;
 }
 
-h1.title,
-p.subtitle {
-  margin-block-start: 0;
+#custom-title-block {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  z-index: 1000;
   color: white;
 }
 
-h1.title {
+#custom-title-block h1,
+#custom-title-block  p {
+  margin-block-start: 0;
+}
+
+#custom-title-block h1 {
   text-transform: uppercase;
   font-weight: 900;
+  margin-block-end: 0;
   margin-block-end: 0.2em;
 }
 
-p.subtitle {
+#custom-title-block p {
   font-weight: 400;
-  margin-block-end: 0;
 }
 
 

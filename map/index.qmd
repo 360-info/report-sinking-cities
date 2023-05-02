@@ -1,6 +1,6 @@
 ---
-title: Untitled
-subtitle: Some more **bold** text here
+# title: Untitled
+# subtitle: Some more **bold** text here
 format:
   360-embed-html: default
 resources:
@@ -61,18 +61,18 @@ cityBoundsExtracted = cityBounds
   .map(d => ({ ...d, city: d.filename.split("_")[0] }))
 
 // get bounds of selected city
-// (there'll be duploicates; just grab the first)
+// (there'll be duplicates; just grab the first)
 // mapbox and deckgl take bounds in different orders, ugh
 filteredCityInfo = cityBoundsExtracted.filter(d => d.city == selectedCity)
 filteredCityBoundsMapbox = [
-    [filteredCityInfo[0].xmin, filteredCityInfo[0].ymin],
-    [filteredCityInfo[0].xmax, filteredCityInfo[0].ymax]
+    [filteredCityInfo[0].lon_min, filteredCityInfo[0].lat_min],
+    [filteredCityInfo[0].lon_max, filteredCityInfo[0].lat_max]
   ]
 filteredCityBoundsDeckGL = [
-  filteredCityInfo[0].xmin,
-  filteredCityInfo[0].ymin,
-  filteredCityInfo[0].xmax,
-  filteredCityInfo[0].ymax
+  filteredCityInfo[0].lon_min,
+  filteredCityInfo[0].lat_min,
+  filteredCityInfo[0].lon_max,
+  filteredCityInfo[0].lat_max
 ]
 
 // fly to the selected city whenever it changes (accounting for bottom bar)
@@ -80,6 +80,15 @@ map.fitBounds(filteredCityBoundsMapbox, {
   linear: false,
   offset: [0, -80]
   })
+```
+
+```{ojs}
+//| label: custom-title-block
+//| classes: custom-title-block
+
+max_city_sink = Math.abs(Math.min(...filteredCityInfo.map(d => d.file_min)))
+map_title = md`# Sinking cities: ${selectedCity}`
+map_subtitle = md`Measurements from researchers found that parts of the city are sinking by as much as **${max_city_sink * 100} cm per year.**` 
 ```
 
 ```{ojs}
@@ -91,13 +100,9 @@ allCities = [...new Set(cityBoundsExtracted.map(d => d.city))]
 
 viewof selectedCity = Inputs.select(allCities, { label: "City" });
 
-viewof selectedCertainties = Inputs.checkbox(
-  ["0to25", "25to50", "50to100", "gt100"],
-  {
-    label: "Certainty",
-    value: ["0to25", "25to50", "50to100", "gt100"]
-  }
-);
+viewof certaintyBound = Inputs.checkbox(["Show less precise estimates"])
+
+/* legend */
 
 width = 25
 bins = 10
@@ -111,9 +116,9 @@ legend =
       (colour, i) => svg`<rect height=15 y=23 width=${width}
         x=${width * i} fill="${colour}"></rect>`
     )}
-    <text fill="black" y=55 text-anchor="start" x=0>-15cm/yr</text>
+    <text fill="black" y=55 text-anchor="start" x=0>-${filteredCityInfo[0].palette_extent * 100} cm/yr</text>
     <text fill="black" y=55 text-anchor="end" x=${width * bins}>
-      15cm/yr
+      +${filteredCityInfo[0].palette_extent * 100} cm/yr
     </text>
   </svg>`
 ```
@@ -125,47 +130,61 @@ legend =
 // define layers but don't add images yet
 // (also disable the default interpolation, so we can stack the layers)
 layer_0to25 = new lib.deck.MapboxLayer({
-  id: "raster_0to25", type: lib.deck.BitmapLayer, image: [],
+  id: "raster_0to25",
+  type: lib.deck.BitmapLayer,
+  image: [],
   textureParameters: {
     [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,
     [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST
-  }
+  },
+  // coordinateSystem: lib.deck.COORDINATE_SYSTEM.METER_OFFSETS
 });
 layer_25to50 = new lib.deck.MapboxLayer({
-  id: "raster_25to50", type: lib.deck.BitmapLayer, image: [],
+  id: "raster_25to50",
+  type: lib.deck.BitmapLayer,
+  image: [],
   textureParameters: {
     [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,
     [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST
-  }
+  },
+  // coordinateSystem: lib.deck.COORDINATE_SYSTEM.METER_OFFSETS
 });
 layer_50to100 = new lib.deck.MapboxLayer({
-  id: "raster_50to100", type: lib.deck.BitmapLayer, image: [],
+  id: "raster_50to100",
+  type: lib.deck.BitmapLayer,
+  image: [],
   textureParameters: {
     [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,
     [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST
-  }
+  },
+  // coordinateSystem: lib.deck.COORDINATE_SYSTEM.METER_OFFSETS
 });
 layer_gt100 = new lib.deck.MapboxLayer({
-  id: "raster_gt100", type: lib.deck.BitmapLayer, image: [],
+  id: "raster_gt100",
+  type: lib.deck.BitmapLayer,
+  image: [],
   textureParameters: {
     [lib.luma.GL.TEXTURE_MIN_FILTER]: lib.luma.GL.NEAREST,
     [lib.luma.GL.TEXTURE_MAG_FILTER]: lib.luma.GL.NEAREST
-  }
+  },
+  // coordinateSystem: lib.deck.COORDINATE_SYSTEM.METER_OFFSETS
 });
+
+
 ```
 
 ```{ojs}
 //| label: raster-layer-update
 //| output: false
 
-// conditionally display city's png if certainty is checked
-path_0to25 = selectedCertainties.includes("0to25") ?
-    "/data/3-pngs/" + selectedCity + "_0to25pp.png" : null
-path_25to50 = selectedCertainties.includes("25to50") ?
+path_0to25 = "/data/3-pngs/" + selectedCity + "_0to25pp.png"
+
+// conditionally display city's less precise pngs if certainty is checked
+path_25to50 = certaintyBound.includes("Show less precise estimates") ?
     "/data/3-pngs/" + selectedCity + "_25to50pp.png" : null
-path_50to100 = selectedCertainties.includes("50to100") ?
+path_50to100 = certaintyBound.includes("Show less precise estimates") ?
     "/data/3-pngs/" + selectedCity + "_50to100pp.png" : null
-path_gt100 = selectedCertainties.includes("gt100") ?
+path_gt100 = certaintyBound.includes("Show less precise estimates") ?
     "/data/3-pngs/" + selectedCity + "_gt100pp.png" : null
 
 // update the layers with the selected city's file paths and bounds
@@ -210,6 +229,11 @@ viewof map = {
     map.addLayer(layer_25to50);
     map.addLayer(layer_50to100);
     map.addLayer(layer_gt100);
+
+    // TODO - opacity not working
+    // map.setPaintProperty("raster_25to50", "raster-opacity", 0.75)
+    // map.setPaintProperty("raster_50to100", "raster-opacity", 0.5)
+    // map.setPaintProperty("raster_gt100", "raster-opacity", 0.25)
     
   });
 }
