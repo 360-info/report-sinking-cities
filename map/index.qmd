@@ -95,10 +95,21 @@ map_subtitle = md`Measurements from researchers found that parts of the city are
 //| label: inputs
 //| classes: inputForm
 
+// has someone provided a default city via a URL parameter? test it against
+// the city list
+defaultCity = {
+  const pageURL = new URL(window.location.href);
+  const cityChoice = pageURL.searchParams.get("city");
+  
+  return allCities.includes(cityChoice) ? cityChoice : "Jakarta";
+}
+
 // get list of all unique cities (with which to populate dropdown menu below)
 allCities = [...new Set(cityBoundsExtracted.map(d => d.city))]
 
-viewof selectedCity = Inputs.select(allCities, { label: "City" });
+viewof selectedCity = Inputs.select(allCities, {
+  label: "City",
+  value: defaultCity });
 
 viewof certaintyBound = Inputs.checkbox(["Show less precise estimates"])
 
@@ -222,11 +233,9 @@ viewof map = {
   // the container div
   let map = new maplibregl.Map({
     container,
-    // bounds: [[106.282959, 11.256862], [107.143957, 10.213583]],
-    bounds: [
-      [-4.292916666833331, 5.22125016616666],
-      [-3.7187502298333306, 5.63625000016666]
-      ],
+    zoom: 1,
+    center: [0, 0],
+    
     // pitch: 30,
     antialias: true,
     style: "style.json",
