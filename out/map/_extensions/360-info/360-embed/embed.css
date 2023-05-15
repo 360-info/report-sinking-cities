@@ -103,6 +103,7 @@ a:visited {
   transform: scale(0.9);
   transform-origin: center left;
   width: 105%;
+  overflow-y: hidden;
 }
 
 .inputForm .cell-output-display p {
