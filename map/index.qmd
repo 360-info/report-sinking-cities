@@ -12,7 +12,7 @@ resources:
   - cross.png
 360embed:
   before: |
-    &lt;iframe allow=&quot;fullscreen&quot; allowfullscreen=&quot;true&quot; src=&quot;
+    &lt;iframe allow=&quot;fullscreen; clipboard-write self https://may2023.360info-sinking-cities.pages.dev&quot; allowfullscreen=&quot;true&quot; src=&quot;
   # uncomment and modify this line for production
   url: https://may2023.360info-sinking-cities.pages.dev/map/
   after: |
